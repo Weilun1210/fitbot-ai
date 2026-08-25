@@ -44,6 +44,9 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             'messenger.addEventListener("df-response-received"',
             "list.scrollTop = list.scrollHeight",
             "scrollbar-gutter: stable",
+            'panel.style.setProperty("display", "flex", "important")',
+            'panel.style.setProperty("flex-direction", "column", "important")',
+            'inputShell.style.setProperty("flex", "0 0 auto", "important")',
         ):
             self.assertIn(text, SOURCE)
 
