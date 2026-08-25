@@ -663,8 +663,17 @@ page = dedent(
               });
               if (nestedRoot.querySelector("#messageList")) {
                 ensureShadowStyle(nestedRoot, "fitbox-message-theme", `
-                  .message-list-wrapper { min-height: 0 !important; overflow: hidden !important; }
+                  .message-list-wrapper {
+                    flex: 1 1 0% !important;
+                    height: auto !important;
+                    min-height: 0 !important;
+                    max-height: none !important;
+                    overflow: hidden !important;
+                  }
                   #messageList {
+                    flex: 1 1 auto !important;
+                    height: 100% !important;
+                    max-height: none !important;
                     min-height: 0 !important;
                     overflow-x: hidden !important;
                     overflow-y: auto !important;
@@ -810,9 +819,26 @@ page = dedent(
             panel.style.setProperty("height", "100%", "important");
             panel.style.setProperty("min-height", "0", "important");
             panel.style.setProperty("max-height", "none", "important");
+            panel.style.setProperty("display", "flex", "important");
+            panel.style.setProperty("flex-direction", "column", "important");
             panel.style.setProperty("border-radius", "18px", "important");
             panel.style.setProperty("overflow", "hidden", "important");
             panel.style.setProperty("box-shadow", "0 12px 32px rgba(25,31,18,.10)", "important");
+            const messageWrapper = panel.querySelector(".message-list-wrapper");
+            if (messageWrapper) {
+              messageWrapper.style.setProperty("flex", "1 1 0%", "important");
+              messageWrapper.style.setProperty("height", "auto", "important");
+              messageWrapper.style.setProperty("min-height", "0", "important");
+              messageWrapper.style.setProperty("max-height", "none", "important");
+              messageWrapper.style.setProperty("overflow", "hidden", "important");
+            }
+            const inputShell = panel.querySelector("df-messenger-user-input");
+            if (inputShell) {
+              inputShell.style.setProperty("flex", "0 0 auto", "important");
+              inputShell.style.setProperty("position", "relative", "important");
+              inputShell.style.setProperty("inset", "auto", "important");
+              inputShell.style.setProperty("width", "100%", "important");
+            }
             root.querySelectorAll("df-messenger-chat-bubble").forEach((node) => node.style.setProperty("display", "none", "important"));
             themeChatContent(); observeMessageList(); loading.style.display = "none"; return true;
           }
