@@ -29,18 +29,22 @@ st.markdown(
       }
       [data-testid="stAppViewContainer"] { background: #eef1e8; }
       [data-testid="stMainBlockContainer"] {
-        max-width: 1180px;
+        max-width: none;
         width: 100%;
+        height: 100vh;
         margin-inline: auto;
-        padding: 1.1rem 1rem 1rem;
+        padding: 0;
       }
       iframe[title="st.iframe"] {
-        border-radius: 26px;
-        box-shadow: 0 24px 70px rgba(25, 31, 18, .13);
+        display: block;
+        width: 100% !important;
+        height: 100vh !important;
+        border-radius: 0;
+        box-shadow: none;
       }
       @media (max-width: 640px) {
-        [data-testid="stMainBlockContainer"] { padding: .35rem; }
-        iframe[title="st.iframe"] { border-radius: 18px; }
+        [data-testid="stMainBlockContainer"] { padding: 0; }
+        iframe[title="st.iframe"] { border-radius: 0; }
       }
     </style>
     """,
@@ -84,15 +88,15 @@ page = dedent(
             outline-offset: 2px;
           }
           .shell {
-            height: 700px;
+            height: 100vh;
             width: 100%;
             margin-inline: auto;
             display: grid;
             grid-template-rows: auto minmax(0, 1fr);
             overflow: hidden;
             background: var(--paper);
-            border: 1px solid rgba(21, 26, 18, .08);
-            border-radius: 26px;
+            border: 0;
+            border-radius: 0;
           }
           .topbar {
             display: flex;
@@ -334,7 +338,7 @@ page = dedent(
           }
           .toast.show { opacity: 1; transform: translate(-50%, 0); }
           @media (max-width: 760px) {
-            .shell { height: 700px; border-radius: 18px; }
+            .shell { height: 100vh; border-radius: 0; }
             .topbar { padding: 14px 15px; }
             .mark { width: 40px; height: 40px; flex-basis: 40px; font-size: 20px; }
             h1 { font-size: 16px; }
@@ -809,6 +813,7 @@ page = dedent(
             if (openButton?.getAttribute("aria-expanded") !== "true" && messenger.dataset.autoOpened !== "true") {
               messenger.dataset.autoOpened = "true"; openButton.click(); return false;
             }
+            if (openButton) openButton.style.setProperty("display", "none", "important");
             messenger.style.setProperty("position", "absolute", "important");
             messenger.style.setProperty("inset", "0", "important");
             messenger.style.setProperty("width", "100%", "important");
@@ -819,13 +824,13 @@ page = dedent(
             messengerWrapper.style.setProperty("height", "100%", "important");
             messengerWrapper.style.setProperty("overflow", "hidden", "important");
             chat.style.setProperty("position", "absolute", "important");
-            chat.style.setProperty("inset", "12px", "important");
+            chat.style.setProperty("inset", "0", "important");
             chat.style.setProperty("width", "auto", "important");
             chat.style.setProperty("height", "auto", "important");
             chat.style.setProperty("max-height", "none", "important");
-            chat.style.setProperty("border-radius", "18px", "important");
+            chat.style.setProperty("border-radius", "0", "important");
             chat.style.setProperty("overflow", "hidden", "important");
-            chat.style.setProperty("box-shadow", "0 12px 32px rgba(25,31,18,.10)", "important");
+            chat.style.setProperty("box-shadow", "none", "important");
             panel.classList.remove("chat-min");
             panel.style.setProperty("position", "absolute", "important");
             panel.style.setProperty("inset", "0", "important");
@@ -837,9 +842,9 @@ page = dedent(
             panel.style.setProperty("max-height", "none", "important");
             panel.style.setProperty("display", "flex", "important");
             panel.style.setProperty("flex-direction", "column", "important");
-            panel.style.setProperty("border-radius", "18px", "important");
+            panel.style.setProperty("border-radius", "0", "important");
             panel.style.setProperty("overflow", "hidden", "important");
-            panel.style.setProperty("box-shadow", "0 12px 32px rgba(25,31,18,.10)", "important");
+            panel.style.setProperty("box-shadow", "none", "important");
             panel.scrollTop = 0;
             if (panel.dataset.fitboxScrollPinned !== "true") {
               panel.dataset.fitboxScrollPinned = "true";
@@ -880,4 +885,4 @@ page = dedent(
     """
 ).replace("__AGENT_ID__", AGENT_ID)
 
-components.html(page, height=720, scrolling=False)
+components.html(page, height=900, scrolling=False)

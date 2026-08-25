@@ -48,6 +48,13 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         self.assertIn("margin-left: auto !important", SOURCE)
         self.assertIn("margin-right: 8px !important", SOURCE)
 
+    def test_chat_uses_the_full_browser_page(self) -> None:
+        self.assertIn("max-width: none", SOURCE)
+        self.assertIn("height: 100vh", SOURCE)
+        self.assertIn('chat.style.setProperty("inset", "0", "important")', SOURCE)
+        self.assertIn('openButton.style.setProperty("display", "none", "important")', SOURCE)
+        self.assertNotIn('chat.style.setProperty("inset", "12px", "important")', SOURCE)
+
     def test_message_list_scroll_and_events_are_wired(self) -> None:
         for text in (
             "function findMessageList()",
