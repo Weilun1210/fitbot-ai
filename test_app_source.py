@@ -35,6 +35,19 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             SOURCE,
         )
 
+    def test_chat_stays_centered_when_guide_opens(self) -> None:
+        self.assertIn("margin-inline: auto", SOURCE)
+        self.assertIn(".drawer {\n            position: absolute;", SOURCE)
+        self.assertNotIn(
+            ".workspace.drawer-open .drawer {\n            width: var(--drawer-width);",
+            SOURCE,
+        )
+
+    def test_user_messages_align_to_the_right(self) -> None:
+        self.assertIn("width: fit-content !important", SOURCE)
+        self.assertIn("margin-left: auto !important", SOURCE)
+        self.assertIn("margin-right: 8px !important", SOURCE)
+
     def test_message_list_scroll_and_events_are_wired(self) -> None:
         for text in (
             "function findMessageList()",

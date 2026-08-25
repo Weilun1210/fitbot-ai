@@ -30,6 +30,8 @@ st.markdown(
       [data-testid="stAppViewContainer"] { background: #eef1e8; }
       [data-testid="stMainBlockContainer"] {
         max-width: 1180px;
+        width: 100%;
+        margin-inline: auto;
         padding: 1.1rem 1rem 1rem;
       }
       iframe[title="st.iframe"] {
@@ -83,6 +85,8 @@ page = dedent(
           }
           .shell {
             height: 700px;
+            width: 100%;
+            margin-inline: auto;
             display: grid;
             grid-template-rows: auto minmax(0, 1fr);
             overflow: hidden;
@@ -137,24 +141,23 @@ page = dedent(
             background: #f4f6ef;
           }
           .drawer {
-            position: relative;
+            position: absolute;
+            inset: 0 auto 0 0;
             z-index: 4;
-            width: 0;
-            flex: 0 0 auto;
+            width: min(var(--drawer-width), calc(100% - 48px));
             overflow: hidden;
             opacity: 0;
             pointer-events: none;
-            transform: translateX(-16px);
+            transform: translateX(-102%);
             background: #fbfcf7;
-            border-right: 1px solid transparent;
-            transition: width .24s ease, opacity .18s ease, transform .24s ease;
+            border-right: 1px solid var(--line);
+            box-shadow: 18px 0 40px rgba(18, 22, 15, .16);
+            transition: opacity .18s ease, transform .24s ease;
           }
           .workspace.drawer-open .drawer {
-            width: var(--drawer-width);
             opacity: 1;
             pointer-events: auto;
             transform: translateX(0);
-            border-right-color: var(--line);
           }
           .drawer-inner {
             width: var(--drawer-width);
@@ -263,7 +266,7 @@ page = dedent(
           }
           .example:hover { border-color: #91b91e; background: #f4fadf; }
           .backdrop {
-            display: none;
+            display: block;
             position: absolute;
             inset: 0;
             z-index: 3;
@@ -271,10 +274,14 @@ page = dedent(
             background: rgba(15, 18, 13, .46);
             opacity: 0;
             pointer-events: none;
+            transition: opacity .2s ease;
           }
+          .workspace.drawer-open .backdrop { opacity: .18; pointer-events: auto; }
           .chat-stage {
             position: relative;
             flex: 1 1 auto;
+            width: 100%;
+            margin-inline: auto;
             min-width: 0;
             min-height: 0;
             overflow: hidden;
@@ -352,8 +359,7 @@ page = dedent(
             .workspace.drawer-open .drawer-toggle {
               left: min(calc(88vw - 52px), calc(var(--drawer-width) - 52px));
             }
-            .backdrop { display: block; transition: opacity .2s ease; }
-            .workspace.drawer-open .backdrop { opacity: 1; pointer-events: auto; }
+            .workspace.drawer-open .backdrop { opacity: .46; pointer-events: auto; }
           }
           @media (max-width: 390px) {
             .topbar { padding-right: 10px; }
@@ -691,9 +697,17 @@ page = dedent(
                     box-shadow: 0 5px 16px rgba(25, 31, 18, .06);
                     line-height: 1.5 !important;
                   }
+                  #messageList .animation:has(.user-message),
+                  #messageList df-message:has(.user-message) {
+                    display: block !important;
+                    width: 100% !important;
+                  }
                   #messageList .message.user-message {
+                    display: block !important;
+                    width: fit-content !important;
                     max-width: min(620px, calc(100% - 24px)) !important;
-                    margin-left: 24px !important;
+                    margin-left: auto !important;
+                    margin-right: 8px !important;
                     padding: 10px 15px !important;
                     border-radius: 14px !important;
                   }
@@ -706,8 +720,8 @@ page = dedent(
                   @media (max-width: 520px) {
                     #messageList { padding: 10px !important; }
                     #messageList df-card { width: 100%; max-width: 100%; }
-                    #messageList .message.bot-message,
-                    #messageList .message.user-message { max-width: calc(100% - 8px) !important; margin-left: 8px !important; margin-right: 8px !important; }
+                    #messageList .message.bot-message { max-width: calc(100% - 8px) !important; margin-left: 8px !important; margin-right: 8px !important; }
+                    #messageList .message.user-message { max-width: calc(100% - 8px) !important; margin-left: auto !important; margin-right: 4px !important; }
                   }
                 `);
               }
