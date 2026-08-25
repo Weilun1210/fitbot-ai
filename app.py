@@ -1,4 +1,4 @@
-"""FitBox dataset-only Streamlit front end for the Dialogflow ES agent.
+"""FitBox Streamlit front end for the Dialogflow ES agent.
 
 The website provides an accessible question builder and embeds Dialogflow
 Messenger. Dialogflow and the PythonAnywhere webhook remain responsible for
@@ -65,6 +65,7 @@ page = dedent(
             --paper: #fbfcf7;
             --line: #dfe4d8;
             --drawer-width: 332px;
+            --card-shadow: 0 8px 24px rgba(25, 31, 18, .08);
           }
           * { box-sizing: border-box; }
           html, body {
@@ -301,6 +302,9 @@ page = dedent(
             --df-messenger-minimized-chat-close-icon-color: #ffffff;
             --df-messenger-send-icon: #6f930d;
             --df-messenger-user-message: #b8f22e;
+            --df-messenger-chip-color: #f8faef;
+            --df-messenger-chip-border-color: #cfd8c3;
+            --df-messenger-focus-color: #6f930d;
             z-index: 2;
           }
           .toast {
@@ -368,7 +372,7 @@ page = dedent(
               <div class="mark" aria-hidden="true">💪</div>
               <div>
                 <h1>FitBox AI Assistant</h1>
-                <div class="subtitle">Dataset-based exercise discovery</div>
+                <div class="subtitle">Personalised exercise discovery</div>
               </div>
             </div>
             <div class="status"><span class="dot" aria-hidden="true"></span> Dialogflow ES online</div>
@@ -383,7 +387,7 @@ page = dedent(
             <aside class="drawer" id="question-guide" aria-label="AI question guide" aria-hidden="true">
               <div class="drawer-inner">
                 <h2 class="drawer-title">Build a question</h2>
-                <p class="drawer-lead">Choose what you want to find in the exercise dataset. FitBox will prepare a question for you.</p>
+                <p class="drawer-lead">Choose what you want to find. FitBox will prepare a question for you.</p>
 
                 <div class="field">
                   <label for="question-category">What would you like to ask?</label>
@@ -635,7 +639,21 @@ page = dedent(
             root.querySelectorAll("*").forEach((element) => { if (element.shadowRoot) roots.push(...nestedRoots(element.shadowRoot)); });
             return roots;
           }
-          function themeUserMessages() {
+          function ensureShadowStyle(root, id, css) {
+            if (!root || root.querySelector(`#${id}`)) return;
+            const style = document.createElement("style");
+            style.id = id;
+            style.textContent = css;
+            root.appendChild(style);
+          }
+          function findMessageList() {
+            for (const root of nestedRoots(findChat()?.shadowRoot)) {
+              const list = root.querySelector("#messageList");
+              if (list) return list;
+            }
+            return null;
+          }
+          function themeChatContent() {
             nestedRoots(findChat()?.shadowRoot).forEach((nestedRoot) => {
               nestedRoot.querySelectorAll(".user-message").forEach((bubble) => {
                 bubble.style.setProperty("background", "#b8f22e", "important");
@@ -643,13 +661,125 @@ page = dedent(
                 bubble.style.setProperty("color", "#151a12", "important");
                 bubble.querySelectorAll("*").forEach((child) => child.style.setProperty("color", "#151a12", "important"));
               });
+              if (nestedRoot.querySelector("#messageList")) {
+                ensureShadowStyle(nestedRoot, "fitbox-message-theme", `
+                  .message-list-wrapper { min-height: 0 !important; overflow: hidden !important; }
+                  #messageList {
+                    min-height: 0 !important;
+                    overflow-x: hidden !important;
+                    overflow-y: auto !important;
+                    scrollbar-gutter: stable;
+                    overscroll-behavior: contain;
+                    scroll-behavior: smooth;
+                    padding: 16px !important;
+                  }
+                  #messageList .message.bot-message {
+                    max-width: min(620px, calc(100% - 24px)) !important;
+                    margin-right: 24px !important;
+                    padding: 11px 15px !important;
+                    border: 1px solid #dfe4d8;
+                    border-radius: 14px !important;
+                    box-shadow: 0 5px 16px rgba(25, 31, 18, .06);
+                    line-height: 1.5 !important;
+                  }
+                  #messageList .message.user-message {
+                    max-width: min(620px, calc(100% - 24px)) !important;
+                    margin-left: 24px !important;
+                    padding: 10px 15px !important;
+                    border-radius: 14px !important;
+                  }
+                  #messageList df-card {
+                    align-self: flex-start;
+                    display: block;
+                    width: min(560px, calc(100% - 12px));
+                    max-width: calc(100% - 12px);
+                  }
+                  @media (max-width: 520px) {
+                    #messageList { padding: 10px !important; }
+                    #messageList df-card { width: 100%; max-width: 100%; }
+                    #messageList .message.bot-message,
+                    #messageList .message.user-message { max-width: calc(100% - 8px) !important; margin-left: 8px !important; margin-right: 8px !important; }
+                  }
+                `);
+              }
+              if (nestedRoot.host?.localName === "df-card") {
+                ensureShadowStyle(nestedRoot, "fitbox-card-theme", `
+                  .card-wrapper {
+                    overflow: hidden;
+                    margin-top: 12px !important;
+                    border: 1px solid #d7dfcc !important;
+                    border-left: 4px solid #b8f22e !important;
+                    border-radius: 14px !important;
+                    box-shadow: 0 8px 24px rgba(25, 31, 18, .08) !important;
+                  }
+                `);
+              }
+              if (nestedRoot.host?.localName === "df-description") {
+                ensureShadowStyle(nestedRoot, "fitbox-description-theme", `
+                  #descriptionWrapper {
+                    padding: 15px 16px !important;
+                    background: #ffffff !important;
+                    border-radius: 0 !important;
+                    font-family: "DM Sans", system-ui, sans-serif !important;
+                  }
+                  .title {
+                    color: #151a12 !important;
+                    font: 800 15px/1.35 "Manrope", system-ui, sans-serif !important;
+                  }
+                  .description-line {
+                    color: #4d5748 !important;
+                    font-size: 13px !important;
+                    line-height: 1.45 !important;
+                    padding-top: 6px !important;
+                  }
+                `);
+              }
+              if (nestedRoot.host?.localName === "df-accordion") {
+                ensureShadowStyle(nestedRoot, "fitbox-accordion-theme", `
+                  #dfAccordionWrapper {
+                    padding: 13px 16px !important;
+                    background: #f7faef !important;
+                    border-top: 1px solid #dfe7d4;
+                    border-radius: 0 !important;
+                    color: #151a12 !important;
+                    font-family: "DM Sans", system-ui, sans-serif !important;
+                  }
+                  #dfAccordionWrapper #title { color: #151a12 !important; font-weight: 700 !important; }
+                  #dfAccordionWrapper #subtitle { color: #687064 !important; }
+                  #dfAccordionWrapper #expandIcon { color: #6f930d !important; }
+                  #dfAccordionWrapper #text { color: #384233 !important; line-height: 1.55 !important; }
+                `);
+              }
             });
+          }
+          let messageObserver = null;
+          let observedMessageList = null;
+          function scrollToLatest(delay = 0) {
+            window.setTimeout(() => {
+              window.requestAnimationFrame(() => {
+                const list = findMessageList();
+                if (list) list.scrollTop = list.scrollHeight;
+              });
+            }, delay);
+          }
+          function observeMessageList() {
+            const list = findMessageList();
+            if (!list || list === observedMessageList) return;
+            messageObserver?.disconnect();
+            observedMessageList = list;
+            messageObserver = new MutationObserver(() => {
+              themeChatContent();
+              scrollToLatest(40);
+            });
+            messageObserver.observe(list, { childList: true, subtree: true });
+            scrollToLatest();
           }
           function fitChatToPanel() {
             const root = messenger.shadowRoot;
             const chat = findChat();
             const panel = chat?.shadowRoot?.querySelector(".chat-wrapper");
-            if (!root || !chat || !panel) return false;
+            const messengerWrapper = root?.querySelector(".df-messenger-wrapper");
+            if (!root || !messengerWrapper || !chat || !panel) return false;
             const openButton = root.querySelector("#widgetIcon");
             if (openButton?.getAttribute("aria-expanded") !== "true" && messenger.dataset.autoOpened !== "true") {
               messenger.dataset.autoOpened = "true"; openButton.click(); return false;
@@ -658,6 +788,11 @@ page = dedent(
             messenger.style.setProperty("inset", "0", "important");
             messenger.style.setProperty("width", "100%", "important");
             messenger.style.setProperty("height", "100%", "important");
+            messengerWrapper.style.setProperty("position", "absolute", "important");
+            messengerWrapper.style.setProperty("inset", "0", "important");
+            messengerWrapper.style.setProperty("width", "100%", "important");
+            messengerWrapper.style.setProperty("height", "100%", "important");
+            messengerWrapper.style.setProperty("overflow", "hidden", "important");
             chat.style.setProperty("position", "absolute", "important");
             chat.style.setProperty("inset", "12px", "important");
             chat.style.setProperty("width", "auto", "important");
@@ -667,29 +802,27 @@ page = dedent(
             chat.style.setProperty("overflow", "hidden", "important");
             chat.style.setProperty("box-shadow", "0 12px 32px rgba(25,31,18,.10)", "important");
             panel.classList.remove("chat-min");
-            const stageRect = stage.getBoundingClientRect();
-            panel.style.setProperty("position", "fixed", "important");
-            panel.style.setProperty("inset", "auto", "important");
-            panel.style.setProperty("top", `${stageRect.top + 12}px`, "important");
-            panel.style.setProperty("left", `${stageRect.left + 12}px`, "important");
-            panel.style.setProperty("right", `${innerWidth - stageRect.right + 12}px`, "important");
-            panel.style.setProperty("bottom", `${innerHeight - stageRect.bottom + 12}px`, "important");
-            panel.style.setProperty("width", "auto", "important");
+            panel.style.setProperty("position", "absolute", "important");
+            panel.style.setProperty("inset", "0", "important");
+            panel.style.setProperty("width", "100%", "important");
             panel.style.setProperty("min-width", "0", "important");
             panel.style.setProperty("max-width", "none", "important");
-            panel.style.setProperty("height", "auto", "important");
+            panel.style.setProperty("height", "100%", "important");
             panel.style.setProperty("min-height", "0", "important");
             panel.style.setProperty("max-height", "none", "important");
             panel.style.setProperty("border-radius", "18px", "important");
             panel.style.setProperty("overflow", "hidden", "important");
             panel.style.setProperty("box-shadow", "0 12px 32px rgba(25,31,18,.10)", "important");
             root.querySelectorAll("df-messenger-chat-bubble").forEach((node) => node.style.setProperty("display", "none", "important"));
-            themeUserMessages(); loading.style.display = "none"; return true;
+            themeChatContent(); observeMessageList(); loading.style.display = "none"; return true;
           }
           let attempts = 0;
           const fitTimer = window.setInterval(() => { attempts += 1; fitChatToPanel(); if (attempts > 80) window.clearInterval(fitTimer); }, 125);
-          window.setInterval(themeUserMessages, 700);
-          window.addEventListener("dfMessengerLoaded", fitChatToPanel);
+          window.setInterval(() => { themeChatContent(); observeMessageList(); }, 700);
+          window.addEventListener("dfMessengerLoaded", () => { fitChatToPanel(); scrollToLatest(120); });
+          messenger.addEventListener("df-messenger-loaded", () => { fitChatToPanel(); scrollToLatest(120); });
+          messenger.addEventListener("df-user-input-entered", () => scrollToLatest(80));
+          messenger.addEventListener("df-response-received", () => scrollToLatest(220));
           window.addEventListener("resize", fitChatToPanel);
           new ResizeObserver(fitChatToPanel).observe(stage);
         </script>
