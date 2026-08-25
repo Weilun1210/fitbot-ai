@@ -28,12 +28,28 @@ st.markdown(
         display: none !important;
       }
       [data-testid="stAppViewContainer"] { background: #eef1e8; }
+      [data-testid="stMain"] {
+        overflow: hidden !important;
+      }
       [data-testid="stMainBlockContainer"] {
         max-width: none;
         width: 100%;
         height: 100vh;
+        min-height: 100vh;
         margin-inline: auto;
         padding: 0;
+        overflow: hidden;
+      }
+      [data-testid="stMainBlockContainer"] > [data-testid="stVerticalBlock"] {
+        height: 100vh !important;
+        min-height: 100vh !important;
+        gap: 0 !important;
+      }
+      [data-testid="stElementContainer"]:has(iframe[title="st.iframe"]) {
+        height: 100vh !important;
+        min-height: 100vh !important;
+        max-height: 100vh !important;
+        flex: 0 0 100vh !important;
       }
       iframe[title="st.iframe"] {
         display: block;

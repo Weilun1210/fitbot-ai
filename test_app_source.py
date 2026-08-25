@@ -61,6 +61,17 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         self.assertIn("padding: 10px 18px;", SOURCE)
         self.assertNotIn("padding: 18px 24px;", SOURCE)
 
+    def test_streamlit_wrappers_cannot_create_vertical_whitespace(self) -> None:
+        self.assertIn('[data-testid="stMain"]', SOURCE)
+        self.assertIn("overflow: hidden !important;", SOURCE)
+        self.assertIn('[data-testid="stVerticalBlock"]', SOURCE)
+        self.assertIn("gap: 0 !important;", SOURCE)
+        self.assertIn(
+            '[data-testid="stElementContainer"]:has(iframe[title="st.iframe"])',
+            SOURCE,
+        )
+        self.assertIn("flex: 0 0 100vh !important;", SOURCE)
+
     def test_message_list_scroll_and_events_are_wired(self) -> None:
         for text in (
             "function findMessageList()",
