@@ -35,11 +35,13 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             SOURCE,
         )
 
-    def test_chat_stays_centered_when_guide_opens(self) -> None:
-        self.assertIn("margin-inline: auto", SOURCE)
-        self.assertIn(".drawer {\n            position: absolute;", SOURCE)
+    def test_desktop_guide_pushes_chat_and_mobile_guide_overlays(self) -> None:
+        self.assertIn("flex: 0 0 0;", SOURCE)
+        self.assertIn("flex-basis: var(--drawer-width);", SOURCE)
+        self.assertIn("width: var(--drawer-width);", SOURCE)
+        self.assertIn(".backdrop { display: block; }", SOURCE)
         self.assertNotIn(
-            ".workspace.drawer-open .drawer {\n            width: var(--drawer-width);",
+            ".workspace.drawer-open .backdrop { opacity: .18",
             SOURCE,
         )
 
@@ -54,6 +56,10 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         self.assertIn('chat.style.setProperty("inset", "0", "important")', SOURCE)
         self.assertIn('openButton.style.setProperty("display", "none", "important")', SOURCE)
         self.assertNotIn('chat.style.setProperty("inset", "12px", "important")', SOURCE)
+
+    def test_compact_header_moves_chat_upward(self) -> None:
+        self.assertIn("padding: 10px 18px;", SOURCE)
+        self.assertNotIn("padding: 18px 24px;", SOURCE)
 
     def test_message_list_scroll_and_events_are_wired(self) -> None:
         for text in (

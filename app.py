@@ -103,15 +103,15 @@ page = dedent(
             align-items: center;
             justify-content: space-between;
             gap: 18px;
-            padding: 18px 24px;
+            padding: 10px 18px;
             background: #171b14;
             color: white;
           }
           .brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
           .mark {
-            width: 44px;
-            height: 44px;
-            flex: 0 0 44px;
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
             display: grid;
             place-items: center;
             border-radius: 13px;
@@ -145,10 +145,12 @@ page = dedent(
             background: #f4f6ef;
           }
           .drawer {
-            position: absolute;
-            inset: 0 auto 0 0;
+            position: relative;
             z-index: 4;
-            width: min(var(--drawer-width), calc(100% - 48px));
+            flex: 0 0 0;
+            width: 0;
+            max-width: 0;
+            min-width: 0;
             overflow: hidden;
             opacity: 0;
             pointer-events: none;
@@ -156,9 +158,12 @@ page = dedent(
             background: #fbfcf7;
             border-right: 1px solid var(--line);
             box-shadow: 18px 0 40px rgba(18, 22, 15, .16);
-            transition: opacity .18s ease, transform .24s ease;
+            transition: flex-basis .24s ease, width .24s ease, max-width .24s ease, opacity .18s ease, transform .24s ease;
           }
           .workspace.drawer-open .drawer {
+            flex-basis: var(--drawer-width);
+            width: var(--drawer-width);
+            max-width: var(--drawer-width);
             opacity: 1;
             pointer-events: auto;
             transform: translateX(0);
@@ -270,7 +275,7 @@ page = dedent(
           }
           .example:hover { border-color: #91b91e; background: #f4fadf; }
           .backdrop {
-            display: block;
+            display: none;
             position: absolute;
             inset: 0;
             z-index: 3;
@@ -280,10 +285,9 @@ page = dedent(
             pointer-events: none;
             transition: opacity .2s ease;
           }
-          .workspace.drawer-open .backdrop { opacity: .18; pointer-events: auto; }
           .chat-stage {
             position: relative;
-            flex: 1 1 auto;
+            flex: 1 1 0;
             width: 100%;
             margin-inline: auto;
             min-width: 0;
@@ -339,14 +343,15 @@ page = dedent(
           .toast.show { opacity: 1; transform: translate(-50%, 0); }
           @media (max-width: 760px) {
             .shell { height: 100vh; border-radius: 0; }
-            .topbar { padding: 14px 15px; }
-            .mark { width: 40px; height: 40px; flex-basis: 40px; font-size: 20px; }
+            .topbar { padding: 8px 12px; }
+            .mark { width: 36px; height: 36px; flex-basis: 36px; font-size: 19px; }
             h1 { font-size: 16px; }
             .subtitle { font-size: 10px; }
             .status { display: none; }
             .drawer {
               position: absolute;
               inset: 0 auto 0 0;
+              flex: 0 0 auto;
               width: min(88vw, var(--drawer-width));
               max-width: calc(100% - 42px);
               opacity: 0;
@@ -355,7 +360,9 @@ page = dedent(
               box-shadow: 18px 0 40px rgba(18, 22, 15, .18);
             }
             .workspace.drawer-open .drawer {
+              flex-basis: auto;
               width: min(88vw, var(--drawer-width));
+              max-width: calc(100% - 42px);
               opacity: 1;
               transform: translateX(0);
             }
@@ -363,6 +370,7 @@ page = dedent(
             .workspace.drawer-open .drawer-toggle {
               left: min(calc(88vw - 52px), calc(var(--drawer-width) - 52px));
             }
+            .backdrop { display: block; }
             .workspace.drawer-open .backdrop { opacity: .46; pointer-events: auto; }
           }
           @media (max-width: 390px) {
