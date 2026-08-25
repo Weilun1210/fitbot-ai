@@ -47,6 +47,9 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             'panel.style.setProperty("display", "flex", "important")',
             'panel.style.setProperty("flex-direction", "column", "important")',
             'inputShell.style.setProperty("flex", "0 0 auto", "important")',
+            "if (shell) shell.scrollTop = 0",
+            'panel.dataset.fitboxScrollPinned !== "true"',
+            "if (panel.scrollTop !== 0) panel.scrollTop = 0",
         ):
             self.assertIn(text, SOURCE)
 
