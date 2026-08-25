@@ -1,8 +1,8 @@
-"""FitBox Streamlit front end for the existing Dialogflow ES agent.
+"""FitBox dataset-only Streamlit front end for the Dialogflow ES agent.
 
-The page keeps Dialogflow as the single chatbot engine, so the Welcome Intent,
-gym information intents, workout intents, and the PythonAnywhere dataset webhook
-all remain available from one public Streamlit page.
+The website provides an accessible question builder and embeds Dialogflow
+Messenger. Dialogflow and the PythonAnywhere webhook remain responsible for
+answering questions from megaGymDataset.csv.
 """
 
 from textwrap import dedent
@@ -27,9 +27,7 @@ st.markdown(
       [data-testid="stDecoration"], [data-testid="stStatusWidget"] {
         display: none !important;
       }
-      [data-testid="stAppViewContainer"] {
-        background: #eef1e8;
-      }
+      [data-testid="stAppViewContainer"] { background: #eef1e8; }
       [data-testid="stMainBlockContainer"] {
         max-width: 1180px;
         padding: 1.1rem 1rem 1rem;
@@ -40,6 +38,7 @@ st.markdown(
       }
       @media (max-width: 640px) {
         [data-testid="stMainBlockContainer"] { padding: .35rem; }
+        iframe[title="st.iframe"] { border-radius: 18px; }
       }
     </style>
     """,
@@ -47,7 +46,7 @@ st.markdown(
 )
 
 page = dedent(
-    f"""
+    """
     <!doctype html>
     <html lang="en">
       <head>
@@ -58,33 +57,39 @@ page = dedent(
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
         <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
         <style>
-          :root {{
+          :root {
             --ink: #151a12;
             --muted: #687064;
             --lime: #b8f22e;
             --lime-dark: #6f930d;
             --paper: #fbfcf7;
             --line: #dfe4d8;
-          }}
-          * {{ box-sizing: border-box; }}
-          html, body {{
+            --drawer-width: 332px;
+          }
+          * { box-sizing: border-box; }
+          html, body {
             margin: 0;
             min-height: 100%;
             overflow: hidden;
             background: #eef1e8;
             color: var(--ink);
             font-family: "DM Sans", system-ui, sans-serif;
-          }}
-          .shell {{
-            height: 640px;
+          }
+          button, select, input { font: inherit; }
+          button:focus-visible, select:focus-visible, input:focus-visible {
+            outline: 3px solid rgba(111, 147, 13, .34);
+            outline-offset: 2px;
+          }
+          .shell {
+            height: 700px;
             display: grid;
-            grid-template-rows: auto auto minmax(0, 1fr);
+            grid-template-rows: auto minmax(0, 1fr);
             overflow: hidden;
             background: var(--paper);
             border: 1px solid rgba(21, 26, 18, .08);
             border-radius: 26px;
-          }}
-          .topbar {{
+          }
+          .topbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -92,188 +97,567 @@ page = dedent(
             padding: 18px 24px;
             background: #171b14;
             color: white;
-          }}
-          .brand {{ display: flex; align-items: center; gap: 13px; }}
-          .mark {{
+          }
+          .brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
+          .mark {
             width: 44px;
             height: 44px;
+            flex: 0 0 44px;
             display: grid;
             place-items: center;
             border-radius: 13px;
             background: var(--lime);
             color: #11150e;
-            font: 800 14px/1 "Manrope", sans-serif;
-            letter-spacing: -.02em;
-          }}
-          h1 {{ margin: 0; font: 800 19px/1.2 "Manrope", sans-serif; }}
-          .subtitle {{ margin-top: 3px; color: #b9c0b4; font-size: 12px; }}
-          .status {{
+            font-size: 23px;
+          }
+          h1 { margin: 0; font: 800 19px/1.2 "Manrope", sans-serif; }
+          .subtitle { margin-top: 3px; color: #b9c0b4; font-size: 12px; }
+          .status {
             display: flex;
             align-items: center;
             gap: 8px;
             color: #dce3d7;
             font-size: 12px;
-          }}
-          .dot {{ width: 8px; height: 8px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 4px rgba(184,242,46,.12); }}
-          .guide {{
-            padding: 15px 20px 13px;
-            border-bottom: 1px solid var(--line);
-            background: linear-gradient(105deg, #f8faef 0%, #fbfcf7 60%);
-          }}
-          .guide-row {{ display: flex; align-items: center; justify-content: space-between; gap: 14px; }}
-          .guide-copy strong {{ display: block; font-size: 14px; }}
-          .guide-copy span {{ display: block; margin-top: 3px; color: var(--muted); font-size: 12px; }}
-          .chips {{ display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }}
-          .chip {{
-            appearance: none;
-            border: 1px solid #cfd6c7;
-            border-radius: 999px;
-            padding: 8px 11px;
-            background: white;
-            color: #333a2f;
-            font: 600 11px/1.2 "DM Sans", sans-serif;
-            cursor: pointer;
-            transition: .16s ease;
-          }}
-          .chip:hover, .chip:focus-visible {{
-            border-color: #9dc91f;
-            background: #f3fadf;
-            transform: translateY(-1px);
-            outline: none;
-          }}
-          .chat-stage {{
+            white-space: nowrap;
+          }
+          .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--lime);
+            box-shadow: 0 0 0 4px rgba(184,242,46,.12);
+          }
+          .workspace {
             position: relative;
+            display: flex;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+            background: #f4f6ef;
+          }
+          .drawer {
+            position: relative;
+            z-index: 4;
+            width: 0;
+            flex: 0 0 auto;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(-16px);
+            background: #fbfcf7;
+            border-right: 1px solid transparent;
+            transition: width .24s ease, opacity .18s ease, transform .24s ease;
+          }
+          .workspace.drawer-open .drawer {
+            width: var(--drawer-width);
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+            border-right-color: var(--line);
+          }
+          .drawer-inner {
+            width: var(--drawer-width);
+            height: 100%;
+            overflow-y: auto;
+            padding: 66px 20px 24px;
+            scrollbar-width: thin;
+            scrollbar-color: #c9d0c1 transparent;
+          }
+          .drawer-toggle {
+            position: absolute;
+            top: 72px;
+            left: 12px;
+            z-index: 6;
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border: 1px solid #c8d0c0;
+            border-radius: 12px;
+            background: #171b14;
+            color: var(--lime);
+            box-shadow: 0 8px 18px rgba(21, 26, 18, .15);
+            font-size: 27px;
+            line-height: 1;
+            cursor: pointer;
+            transition: left .24s ease, top .24s ease, background .16s ease, color .16s ease;
+          }
+          .drawer-toggle:hover { background: #252c20; }
+          .workspace.drawer-open .drawer-toggle {
+            top: 15px;
+            left: calc(var(--drawer-width) - 54px);
+          }
+          .drawer-title { margin: 0; font: 800 20px/1.2 "Manrope", sans-serif; }
+          .drawer-lead { margin: 7px 0 20px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+          .field { margin-top: 15px; }
+          .field label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #323a2d;
+          }
+          .field select, .field input {
+            width: 100%;
+            min-height: 42px;
+            border: 1px solid #cad2c3;
+            border-radius: 10px;
+            background: white;
+            color: var(--ink);
+            padding: 9px 11px;
+          }
+          .field input::placeholder { color: #858d80; }
+          .step[hidden], .flow-section[hidden] { display: none !important; }
+          .prompt-card {
+            margin-top: 18px;
+            padding: 13px;
+            border: 1px solid #d5dfc7;
+            border-radius: 12px;
+            background: #f3f8e8;
+          }
+          .prompt-label {
+            color: var(--lime-dark);
+            font: 800 10px/1.2 "Manrope", sans-serif;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+          }
+          .prompt-preview {
+            min-height: 42px;
+            margin: 7px 0 11px;
+            color: #252d20;
+            font-size: 13px;
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+          }
+          .use-question {
+            width: 100%;
+            min-height: 40px;
+            border: 0;
+            border-radius: 9px;
+            background: #171b14;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+          }
+          .use-question:hover:not(:disabled) { background: #2a3224; }
+          .use-question:disabled { opacity: .45; cursor: not-allowed; }
+          .examples {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid var(--line);
+          }
+          .examples h3 { margin: 0 0 10px; font-size: 13px; }
+          .example-list { display: grid; gap: 7px; }
+          .example {
+            width: 100%;
+            border: 1px solid #d1d8ca;
+            border-radius: 9px;
+            padding: 9px 10px;
+            background: white;
+            color: #333b2e;
+            text-align: left;
+            font-size: 11px;
+            line-height: 1.35;
+            cursor: pointer;
+          }
+          .example:hover { border-color: #91b91e; background: #f4fadf; }
+          .backdrop {
+            display: none;
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            border: 0;
+            background: rgba(15, 18, 13, .46);
+            opacity: 0;
+            pointer-events: none;
+          }
+          .chat-stage {
+            position: relative;
+            flex: 1 1 auto;
+            min-width: 0;
             min-height: 0;
             overflow: hidden;
             background:
               radial-gradient(circle at 15% 10%, rgba(184,242,46,.09), transparent 27%),
               #f4f6ef;
-          }}
-          .loading {{
+          }
+          .loading {
             position: absolute;
             inset: 0;
             display: grid;
             place-items: center;
             color: var(--muted);
             font-size: 13px;
-          }}
-          df-messenger {{
+          }
+          df-messenger {
             --df-messenger-bot-message: #ffffff;
             --df-messenger-button-titlebar-color: #171b14;
             --df-messenger-button-titlebar-font-color: #ffffff;
             --df-messenger-chat-background-color: #f4f6ef;
-            --df-messenger-font-color: #1f251b;
+            --df-messenger-font-color: #151a12;
             --df-messenger-input-box-color: #ffffff;
             --df-messenger-input-font-color: #151a12;
             --df-messenger-input-placeholder-font-color: #788071;
             --df-messenger-minimized-chat-close-icon-color: #ffffff;
             --df-messenger-send-icon: #6f930d;
-            --df-messenger-user-message: #171b14;
+            --df-messenger-user-message: #b8f22e;
             z-index: 2;
-          }}
-          .toast {{
+          }
+          .toast {
             position: absolute;
             left: 50%;
             bottom: 16px;
-            z-index: 5;
+            z-index: 8;
             transform: translate(-50%, 12px);
             opacity: 0;
             pointer-events: none;
+            width: max-content;
+            max-width: calc(100% - 32px);
             padding: 9px 13px;
             border-radius: 10px;
             background: #171b14;
             color: white;
+            text-align: center;
             font-size: 12px;
             transition: .2s ease;
-          }}
-          .toast.show {{ opacity: 1; transform: translate(-50%, 0); }}
-          @media (max-width: 760px) {{
-            .shell {{ height: 640px; border-radius: 18px; }}
-            .topbar {{ padding: 15px; }}
-            .status {{ display: none; }}
-            .guide {{ padding: 12px; }}
-            .guide-row {{ align-items: flex-start; flex-direction: column; }}
-            .chips {{ justify-content: flex-start; }}
-            .chip {{ padding: 7px 9px; }}
-          }}
+          }
+          .toast.show { opacity: 1; transform: translate(-50%, 0); }
+          @media (max-width: 760px) {
+            .shell { height: 700px; border-radius: 18px; }
+            .topbar { padding: 14px 15px; }
+            .mark { width: 40px; height: 40px; flex-basis: 40px; font-size: 20px; }
+            h1 { font-size: 16px; }
+            .subtitle { font-size: 10px; }
+            .status { display: none; }
+            .drawer {
+              position: absolute;
+              inset: 0 auto 0 0;
+              width: min(88vw, var(--drawer-width));
+              max-width: calc(100% - 42px);
+              opacity: 0;
+              transform: translateX(-102%);
+              border-right: 1px solid var(--line);
+              box-shadow: 18px 0 40px rgba(18, 22, 15, .18);
+            }
+            .workspace.drawer-open .drawer {
+              width: min(88vw, var(--drawer-width));
+              opacity: 1;
+              transform: translateX(0);
+            }
+            .drawer-inner { width: min(88vw, var(--drawer-width)); max-width: calc(100vw - 42px); }
+            .workspace.drawer-open .drawer-toggle {
+              left: min(calc(88vw - 52px), calc(var(--drawer-width) - 52px));
+            }
+            .backdrop { display: block; transition: opacity .2s ease; }
+            .workspace.drawer-open .backdrop { opacity: 1; pointer-events: auto; }
+          }
+          @media (max-width: 390px) {
+            .topbar { padding-right: 10px; }
+            .subtitle { max-width: 225px; }
+            .drawer-inner { padding-left: 16px; padding-right: 16px; }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+          }
         </style>
       </head>
       <body>
         <main class="shell">
           <header class="topbar">
             <div class="brand">
-              <div class="mark">FB</div>
+              <div class="mark" aria-hidden="true">💪</div>
               <div>
                 <h1>FitBox AI Assistant</h1>
-                <div class="subtitle">Gym guidance and personalised exercise discovery</div>
+                <div class="subtitle">Dataset-based exercise discovery</div>
               </div>
             </div>
-            <div class="status"><span class="dot"></span> Dialogflow ES online</div>
+            <div class="status"><span class="dot" aria-hidden="true"></span> Dialogflow ES online</div>
           </header>
 
-          <section class="guide" aria-label="Suggested questions">
-            <div class="guide-row">
-              <div class="guide-copy">
-                <strong>Not sure what to ask?</strong>
-                <span>Choose a suggestion, then press Enter in the chat box.</span>
-              </div>
-              <div class="chips">
-                <button class="chip" data-prompt="How do I get started?">How do I get started?</button>
-                <button class="chip" data-prompt="What can FitBox help me with?">What can FitBox help with?</button>
-                <button class="chip" data-prompt="Give me beginner chest exercises">Beginner chest exercises</button>
-                <button class="chip" data-prompt="Show me exercises using dumbbells">Dumbbell exercises</button>
-              </div>
-            </div>
-          </section>
+          <div class="workspace" id="workspace">
+            <button class="drawer-toggle" id="drawer-toggle" type="button" aria-controls="question-guide" aria-expanded="false" aria-label="Open question guide">
+              <span aria-hidden="true">›</span>
+            </button>
+            <button class="backdrop" id="backdrop" type="button" aria-label="Close question guide"></button>
 
-          <section class="chat-stage" id="chat-stage">
-            <div class="loading" id="loading">Loading FitBox assistant…</div>
-            <df-messenger
-              intent="WELCOME"
-              chat-title="FitBox Assistant"
-              agent-id="{AGENT_ID}"
-              language-code="en"
-              expand>
-            </df-messenger>
-            <div class="toast" id="toast">Suggestion added — press Enter to send</div>
-          </section>
+            <aside class="drawer" id="question-guide" aria-label="AI question guide" aria-hidden="true">
+              <div class="drawer-inner">
+                <h2 class="drawer-title">Build a question</h2>
+                <p class="drawer-lead">Choose what you want to find in the exercise dataset. FitBox will prepare a question for you.</p>
+
+                <div class="field">
+                  <label for="question-category">What would you like to ask?</label>
+                  <select id="question-category">
+                    <option value="">Choose a category</option>
+                    <option value="personalised">Personalised recommendation</option>
+                    <option value="body_part">Search by body part</option>
+                    <option value="equipment">Search by equipment</option>
+                    <option value="fitness_level">Search by fitness level</option>
+                    <option value="exercise_type">Search by exercise type</option>
+                    <option value="exercise_details">Exercise details</option>
+                  </select>
+                </div>
+
+                <section class="flow-section" id="personalised-flow" hidden aria-label="Personalised recommendation options">
+                  <div class="field step" id="step-level">
+                    <label for="personal-level">1. Fitness level</label>
+                    <select id="personal-level">
+                      <option value="">Choose a level</option><option value="Any">Any level</option>
+                      <option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Expert">Expert</option>
+                    </select>
+                  </div>
+                  <div class="field step" id="step-body" hidden>
+                    <label for="personal-body">2. Body part</label>
+                    <select id="personal-body">
+                      <option value="">Choose a body part</option><option value="Any">Any body part</option>
+                      <option>Abdominals</option><option>Abductors</option><option>Adductors</option><option>Biceps</option><option>Calves</option>
+                      <option>Chest</option><option>Forearms</option><option>Glutes</option><option>Hamstrings</option><option>Lats</option>
+                      <option>Lower Back</option><option>Middle Back</option><option>Neck</option><option>Quadriceps</option><option>Shoulders</option>
+                      <option>Traps</option><option>Triceps</option>
+                    </select>
+                  </div>
+                  <div class="field step" id="step-equipment" hidden>
+                    <label for="personal-equipment">3. Equipment</label>
+                    <select id="personal-equipment">
+                      <option value="">Choose equipment</option><option value="Any">Any equipment</option>
+                      <option>Bands</option><option>Barbell</option><option>Body Only</option><option>Cable</option><option>Dumbbell</option>
+                      <option>E-Z Curl Bar</option><option>Exercise Ball</option><option>Foam Roll</option><option>Kettlebells</option>
+                      <option>Machine</option><option>Medicine Ball</option><option>None</option><option>Other</option>
+                    </select>
+                  </div>
+                  <div class="field step" id="step-type" hidden>
+                    <label for="personal-type">4. Exercise type</label>
+                    <select id="personal-type">
+                      <option value="">Choose an exercise type</option><option value="Any">Any type</option>
+                      <option>Cardio</option><option>Olympic Weightlifting</option><option>Plyometrics</option><option>Powerlifting</option>
+                      <option>Strength</option><option>Stretching</option><option>Strongman</option>
+                    </select>
+                  </div>
+                </section>
+
+                <section class="flow-section" id="body_part-flow" hidden>
+                  <div class="field"><label for="single-body">Body part</label><select id="single-body">
+                    <option value="">Choose a body part</option><option>Abdominals</option><option>Abductors</option><option>Adductors</option>
+                    <option>Biceps</option><option>Calves</option><option>Chest</option><option>Forearms</option><option>Glutes</option>
+                    <option>Hamstrings</option><option>Lats</option><option>Lower Back</option><option>Middle Back</option><option>Neck</option>
+                    <option>Quadriceps</option><option>Shoulders</option><option>Traps</option><option>Triceps</option>
+                  </select></div>
+                </section>
+                <section class="flow-section" id="equipment-flow" hidden>
+                  <div class="field"><label for="single-equipment">Equipment</label><select id="single-equipment">
+                    <option value="">Choose equipment</option><option>Bands</option><option>Barbell</option><option>Body Only</option>
+                    <option>Cable</option><option>Dumbbell</option><option>E-Z Curl Bar</option><option>Exercise Ball</option>
+                    <option>Foam Roll</option><option>Kettlebells</option><option>Machine</option><option>Medicine Ball</option><option>None</option><option>Other</option>
+                  </select></div>
+                </section>
+                <section class="flow-section" id="fitness_level-flow" hidden>
+                  <div class="field"><label for="single-level">Fitness level</label><select id="single-level">
+                    <option value="">Choose a level</option><option>Beginner</option><option>Intermediate</option><option>Expert</option>
+                  </select></div>
+                </section>
+                <section class="flow-section" id="exercise_type-flow" hidden>
+                  <div class="field"><label for="single-type">Exercise type</label><select id="single-type">
+                    <option value="">Choose an exercise type</option><option>Cardio</option><option>Olympic Weightlifting</option>
+                    <option>Plyometrics</option><option>Powerlifting</option><option>Strength</option><option>Stretching</option><option>Strongman</option>
+                  </select></div>
+                </section>
+                <section class="flow-section" id="exercise_details-flow" hidden>
+                  <div class="field"><label for="exercise-name">Exercise name</label>
+                    <input id="exercise-name" type="text" autocomplete="off" placeholder="e.g. Partner plank band row" />
+                  </div>
+                </section>
+
+                <div class="prompt-card" id="prompt-card" hidden>
+                  <div class="prompt-label">Your question</div>
+                  <div class="prompt-preview" id="prompt-preview" aria-live="polite"></div>
+                  <button class="use-question" id="use-question" type="button" disabled>Use this question</button>
+                </div>
+
+                <section class="examples" aria-labelledby="examples-title">
+                  <h3 id="examples-title">Example questions</h3>
+                  <div class="example-list">
+                    <button class="example" type="button" data-prompt="Give me beginner chest exercises">Give me beginner chest exercises</button>
+                    <button class="example" type="button" data-prompt="Show me exercises using dumbbells">Show me exercises using dumbbells</button>
+                    <button class="example" type="button" data-prompt="Show me strength exercises">Show me strength exercises</button>
+                    <button class="example" type="button" data-prompt="Tell me about Partner plank band row">Tell me about Partner plank band row</button>
+                  </div>
+                </section>
+              </div>
+            </aside>
+
+            <section class="chat-stage" id="chat-stage" aria-label="FitBox chat">
+              <div class="loading" id="loading" role="status">Loading FitBox assistant…</div>
+              <df-messenger intent="WELCOME" chat-title="FitBox Assistant" agent-id="__AGENT_ID__" language-code="en" expand></df-messenger>
+              <div class="toast" id="toast" role="status" aria-live="polite">Question added — press Enter to send</div>
+            </section>
+          </div>
         </main>
 
         <script>
+          const workspace = document.getElementById("workspace");
+          const drawer = document.getElementById("question-guide");
+          const drawerToggle = document.getElementById("drawer-toggle");
+          const toggleGlyph = drawerToggle.querySelector("span");
+          const backdrop = document.getElementById("backdrop");
+          const category = document.getElementById("question-category");
           const messenger = document.querySelector("df-messenger");
           const stage = document.getElementById("chat-stage");
           const loading = document.getElementById("loading");
           const toast = document.getElementById("toast");
+          const promptCard = document.getElementById("prompt-card");
+          const promptPreview = document.getElementById("prompt-preview");
+          const useQuestion = document.getElementById("use-question");
+          const personalLevel = document.getElementById("personal-level");
+          const personalBody = document.getElementById("personal-body");
+          const personalEquipment = document.getElementById("personal-equipment");
+          const personalType = document.getElementById("personal-type");
+          const stepBody = document.getElementById("step-body");
+          const stepEquipment = document.getElementById("step-equipment");
+          const stepType = document.getElementById("step-type");
+          const singleBody = document.getElementById("single-body");
+          const singleEquipment = document.getElementById("single-equipment");
+          const singleLevel = document.getElementById("single-level");
+          const singleType = document.getElementById("single-type");
+          const exerciseName = document.getElementById("exercise-name");
+          let currentPrompt = "";
+          let toastTimer;
 
-          function findChat() {{
-            return messenger.shadowRoot?.querySelector("df-messenger-chat");
-          }}
+          function isMobile() { return window.matchMedia("(max-width: 760px)").matches; }
+          function setDrawer(open, returnFocus = false) {
+            workspace.classList.toggle("drawer-open", open);
+            drawerToggle.setAttribute("aria-expanded", String(open));
+            drawerToggle.setAttribute("aria-label", open ? "Close question guide" : "Open question guide");
+            drawer.setAttribute("aria-hidden", String(!open));
+            toggleGlyph.textContent = open ? "‹" : "›";
+            if (open) window.setTimeout(() => category.focus(), 260);
+            else if (returnFocus) drawerToggle.focus();
+          }
+          drawerToggle.addEventListener("click", () => setDrawer(!workspace.classList.contains("drawer-open")));
+          backdrop.addEventListener("click", () => setDrawer(false, true));
+          document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && workspace.classList.contains("drawer-open")) setDrawer(false, true);
+          });
 
-          function findInput() {{
-            const chat = findChat();
-            const userInput = chat?.shadowRoot?.querySelector("df-messenger-user-input");
+          function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add("show");
+            window.clearTimeout(toastTimer);
+            toastTimer = window.setTimeout(() => toast.classList.remove("show"), 1900);
+          }
+          function findChat() { return messenger.shadowRoot?.querySelector("df-messenger-chat"); }
+          function findInput() {
+            const userInput = findChat()?.shadowRoot?.querySelector("df-messenger-user-input");
             return userInput?.shadowRoot?.querySelector('input[aria-label="Talk to Agent"], input');
-          }}
+          }
+          function setPrompt(value) {
+            const input = findInput();
+            if (!input) { showToast("Chat is still loading — try again in a moment"); return false; }
+            const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
+            if (setter) setter.call(input, value); else input.value = value;
+            input.dispatchEvent(new InputEvent("input", { bubbles: true, composed: true, data: value, inputType: "insertText" }));
+            input.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
+            input.focus();
+            showToast("Question added — press Enter to send");
+            return true;
+          }
+          function updatePrompt(value) {
+            currentPrompt = value.trim();
+            promptPreview.textContent = currentPrompt || "Complete the choices above to build a question.";
+            promptCard.hidden = !category.value;
+            useQuestion.disabled = !currentPrompt;
+          }
+          function equipmentPhrase(value) {
+            const phrases = {
+              "Bands": "using bands", "Barbell": "using a barbell", "Body Only": "using bodyweight",
+              "Cable": "using cables", "Dumbbell": "using dumbbells", "E-Z Curl Bar": "using an E-Z curl bar",
+              "Exercise Ball": "using an exercise ball", "Foam Roll": "using a foam roll", "Kettlebells": "using kettlebells",
+              "Machine": "using a machine", "Medicine Ball": "using a medicine ball", "None": "with no equipment",
+              "Other": "using other equipment"
+            };
+            return phrases[value] || `using ${value.toLowerCase()}`;
+          }
+          function buildPersonalisedPrompt() {
+            const values = [personalLevel.value, personalBody.value, personalEquipment.value, personalType.value];
+            if (values.some((value) => !value)) { updatePrompt(""); return; }
+            const words = ["Recommend"];
+            if (personalLevel.value !== "Any") words.push(personalLevel.value.toLowerCase());
+            if (personalType.value !== "Any") words.push(personalType.value.toLowerCase());
+            words.push("exercises");
+            let prompt = words.join(" ");
+            if (personalBody.value !== "Any") prompt += ` for ${personalBody.value.toLowerCase()}`;
+            if (personalEquipment.value !== "Any") prompt += ` ${equipmentPhrase(personalEquipment.value)}`;
+            updatePrompt(prompt);
+          }
+          function resetFlowValues() {
+            [personalLevel, personalBody, personalEquipment, personalType, singleBody, singleEquipment, singleLevel, singleType]
+              .forEach((select) => { select.value = ""; });
+            exerciseName.value = "";
+            stepBody.hidden = true; stepEquipment.hidden = true; stepType.hidden = true;
+            updatePrompt("");
+          }
+          category.addEventListener("change", () => {
+            document.querySelectorAll(".flow-section").forEach((section) => { section.hidden = true; });
+            resetFlowValues();
+            if (category.value) {
+              document.getElementById(`${category.value}-flow`).hidden = false;
+              promptCard.hidden = false;
+            }
+          });
+          personalLevel.addEventListener("change", () => {
+            personalBody.value = ""; personalEquipment.value = ""; personalType.value = "";
+            stepBody.hidden = !personalLevel.value; stepEquipment.hidden = true; stepType.hidden = true; updatePrompt("");
+          });
+          personalBody.addEventListener("change", () => {
+            personalEquipment.value = ""; personalType.value = "";
+            stepEquipment.hidden = !personalBody.value; stepType.hidden = true; updatePrompt("");
+          });
+          personalEquipment.addEventListener("change", () => {
+            personalType.value = ""; stepType.hidden = !personalEquipment.value; updatePrompt("");
+          });
+          personalType.addEventListener("change", buildPersonalisedPrompt);
+          singleBody.addEventListener("change", () => updatePrompt(singleBody.value ? `Show me exercises for ${singleBody.value.toLowerCase()}` : ""));
+          singleEquipment.addEventListener("change", () => updatePrompt(singleEquipment.value ? `Show me exercises ${equipmentPhrase(singleEquipment.value)}` : ""));
+          singleLevel.addEventListener("change", () => updatePrompt(singleLevel.value ? `Show me ${singleLevel.value.toLowerCase()} exercises` : ""));
+          singleType.addEventListener("change", () => updatePrompt(singleType.value ? `Show me ${singleType.value.toLowerCase()} exercises` : ""));
+          exerciseName.addEventListener("input", () => {
+            const name = exerciseName.value.trim(); updatePrompt(name ? `Tell me about ${name}` : "");
+          });
+          useQuestion.addEventListener("click", () => {
+            if (currentPrompt && setPrompt(currentPrompt) && isMobile()) setDrawer(false);
+          });
+          document.querySelectorAll(".example").forEach((button) => {
+            button.addEventListener("click", () => { if (setPrompt(button.dataset.prompt) && isMobile()) setDrawer(false); });
+          });
 
-          function fitChatToPanel() {{
+          function nestedRoots(root) {
+            if (!root) return [];
+            const roots = [root];
+            root.querySelectorAll("*").forEach((element) => { if (element.shadowRoot) roots.push(...nestedRoots(element.shadowRoot)); });
+            return roots;
+          }
+          function themeUserMessages() {
+            nestedRoots(findChat()?.shadowRoot).forEach((nestedRoot) => {
+              nestedRoot.querySelectorAll(".user-message").forEach((bubble) => {
+                bubble.style.setProperty("background", "#b8f22e", "important");
+                bubble.style.setProperty("background-color", "#b8f22e", "important");
+                bubble.style.setProperty("color", "#151a12", "important");
+                bubble.querySelectorAll("*").forEach((child) => child.style.setProperty("color", "#151a12", "important"));
+              });
+            });
+          }
+          function fitChatToPanel() {
             const root = messenger.shadowRoot;
             const chat = findChat();
             const panel = chat?.shadowRoot?.querySelector(".chat-wrapper");
             if (!root || !chat || !panel) return false;
-
             const openButton = root.querySelector("#widgetIcon");
-            if (openButton?.getAttribute("aria-expanded") !== "true" &&
-                messenger.dataset.autoOpened !== "true") {{
-              messenger.dataset.autoOpened = "true";
-              openButton.click();
-              return false;
-            }}
-
+            if (openButton?.getAttribute("aria-expanded") !== "true" && messenger.dataset.autoOpened !== "true") {
+              messenger.dataset.autoOpened = "true"; openButton.click(); return false;
+            }
             messenger.style.setProperty("position", "absolute", "important");
             messenger.style.setProperty("inset", "0", "important");
             messenger.style.setProperty("width", "100%", "important");
             messenger.style.setProperty("height", "100%", "important");
-
             chat.style.setProperty("position", "absolute", "important");
             chat.style.setProperty("inset", "12px", "important");
             chat.style.setProperty("width", "auto", "important");
@@ -282,15 +666,14 @@ page = dedent(
             chat.style.setProperty("border-radius", "18px", "important");
             chat.style.setProperty("overflow", "hidden", "important");
             chat.style.setProperty("box-shadow", "0 12px 32px rgba(25,31,18,.10)", "important");
-
             panel.classList.remove("chat-min");
             const stageRect = stage.getBoundingClientRect();
             panel.style.setProperty("position", "fixed", "important");
             panel.style.setProperty("inset", "auto", "important");
-            panel.style.setProperty("top", `${{stageRect.top + 12}}px`, "important");
-            panel.style.setProperty("left", `${{stageRect.left + 12}}px`, "important");
-            panel.style.setProperty("right", `${{innerWidth - stageRect.right + 12}}px`, "important");
-            panel.style.setProperty("bottom", `${{innerHeight - stageRect.bottom + 12}}px`, "important");
+            panel.style.setProperty("top", `${stageRect.top + 12}px`, "important");
+            panel.style.setProperty("left", `${stageRect.left + 12}px`, "important");
+            panel.style.setProperty("right", `${innerWidth - stageRect.right + 12}px`, "important");
+            panel.style.setProperty("bottom", `${innerHeight - stageRect.bottom + 12}px`, "important");
             panel.style.setProperty("width", "auto", "important");
             panel.style.setProperty("min-width", "0", "important");
             panel.style.setProperty("max-width", "none", "important");
@@ -300,54 +683,19 @@ page = dedent(
             panel.style.setProperty("border-radius", "18px", "important");
             panel.style.setProperty("overflow", "hidden", "important");
             panel.style.setProperty("box-shadow", "0 12px 32px rgba(25,31,18,.10)", "important");
-
-            root.querySelectorAll("df-messenger-chat-bubble").forEach((node) => {{
-              node.style.setProperty("display", "none", "important");
-            }});
-            loading.style.display = "none";
-            return true;
-          }}
-
-          function setPrompt(value) {{
-            const input = findInput();
-            if (!input) {{
-              toast.textContent = "Chat is still loading — try again in a moment";
-              toast.classList.add("show");
-              setTimeout(() => toast.classList.remove("show"), 1800);
-              return;
-            }}
-            const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
-            if (setter) setter.call(input, value);
-            else input.value = value;
-            input.dispatchEvent(new InputEvent("input", {{
-              bubbles: true,
-              composed: true,
-              data: value,
-              inputType: "insertText"
-            }}));
-            input.dispatchEvent(new Event("change", {{ bubbles: true, composed: true }}));
-            input.focus();
-            toast.textContent = "Suggestion added — press Enter to send";
-            toast.classList.add("show");
-            setTimeout(() => toast.classList.remove("show"), 1800);
-          }}
-
-          document.querySelectorAll(".chip").forEach((button) => {{
-            button.addEventListener("click", () => setPrompt(button.dataset.prompt));
-          }});
-
+            root.querySelectorAll("df-messenger-chat-bubble").forEach((node) => node.style.setProperty("display", "none", "important"));
+            themeUserMessages(); loading.style.display = "none"; return true;
+          }
           let attempts = 0;
-          const timer = setInterval(() => {{
-            attempts += 1;
-            fitChatToPanel();
-            if (attempts > 80) clearInterval(timer);
-          }}, 125);
+          const fitTimer = window.setInterval(() => { attempts += 1; fitChatToPanel(); if (attempts > 80) window.clearInterval(fitTimer); }, 125);
+          window.setInterval(themeUserMessages, 700);
           window.addEventListener("dfMessengerLoaded", fitChatToPanel);
+          window.addEventListener("resize", fitChatToPanel);
           new ResizeObserver(fitChatToPanel).observe(stage);
         </script>
       </body>
     </html>
     """
-)
+).replace("__AGENT_ID__", AGENT_ID)
 
-components.html(page, height=660, scrolling=False)
+components.html(page, height=720, scrolling=False)
