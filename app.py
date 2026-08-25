@@ -768,6 +768,8 @@ page = dedent(
               window.requestAnimationFrame(() => {
                 const list = findMessageList();
                 if (list) list.scrollTop = list.scrollHeight;
+                const shell = findChat()?.shadowRoot?.querySelector(".chat-wrapper");
+                if (shell) shell.scrollTop = 0;
               });
             }, delay);
           }
@@ -824,6 +826,13 @@ page = dedent(
             panel.style.setProperty("border-radius", "18px", "important");
             panel.style.setProperty("overflow", "hidden", "important");
             panel.style.setProperty("box-shadow", "0 12px 32px rgba(25,31,18,.10)", "important");
+            panel.scrollTop = 0;
+            if (panel.dataset.fitboxScrollPinned !== "true") {
+              panel.dataset.fitboxScrollPinned = "true";
+              panel.addEventListener("scroll", () => {
+                if (panel.scrollTop !== 0) panel.scrollTop = 0;
+              }, { passive: true });
+            }
             const messageWrapper = panel.querySelector(".message-list-wrapper");
             if (messageWrapper) {
               messageWrapper.style.setProperty("flex", "1 1 0%", "important");
