@@ -4,6 +4,20 @@ FitBox is a **Streamlit** interface connected to a **Dialogflow ES** agent and a
 PythonAnywhere webhook. The assistant is intentionally limited to exercise
 information contained in `megaGymDataset.csv`.
 
+## Live project
+
+- Public website: <https://fitboxai.streamlit.app/>
+- GitHub repository: <https://github.com/Weilun1210/fitbox-streamlit-assistant>
+- Dialogflow ES Agent ID: `8ff14895-4120-431e-b4ef-015ed78ce0cc`
+- Tested Streamlit version: `1.61.1`
+
+## Dataset-only scope
+
+FitBox answers only from the exercise dataset: recommendations by fitness
+level, body part, equipment, exercise type, combinations of those filters, and
+details for a named exercise. It does not provide opening hours, location,
+contact number, membership, facilities, or class information.
+
 ## Supported questions
 
 - Exercise recommendations filtered by fitness level, body part, equipment,
