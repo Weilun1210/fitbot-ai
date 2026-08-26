@@ -326,6 +326,106 @@ page = dedent(
               radial-gradient(circle at 15% 10%, rgba(184,242,46,.09), transparent 27%),
               #f4f6ef;
           }
+          .chat-hero {
+            position: absolute;
+            top: 112px;
+            left: 50%;
+            z-index: 3;
+            width: min(820px, calc(100% - 96px));
+            padding: 18px 30px 24px;
+            transform: translateX(-50%);
+            text-align: center;
+            pointer-events: none;
+            isolation: isolate;
+            transition: opacity .28s ease, transform .28s ease, visibility .28s ease;
+          }
+          .chat-hero::before,
+          .chat-hero::after {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            border-radius: 50%;
+            border: 1px solid rgba(111, 147, 13, .2);
+          }
+          .chat-hero::before {
+            width: 230px;
+            height: 230px;
+            top: -74px;
+            left: 2%;
+            background: radial-gradient(circle, rgba(184,242,46,.13), transparent 68%);
+          }
+          .chat-hero::after {
+            width: 160px;
+            height: 160px;
+            right: 5%;
+            bottom: -48px;
+            border-style: dashed;
+          }
+          .hero-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 15px;
+            padding: 7px 13px;
+            border: 1px solid rgba(111, 147, 13, .28);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .72);
+            box-shadow: 0 6px 18px rgba(25, 31, 18, .06);
+            color: #5f7e0b;
+            font: 800 12px/1 "Manrope", sans-serif;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+          }
+          .hero-kicker::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--lime);
+            box-shadow: 0 0 0 4px rgba(184,242,46,.18);
+          }
+          .hero-title {
+            margin: 0;
+            color: #171b14;
+            font: 900 clamp(42px, 5.2vw, 76px)/.96 "Manrope", sans-serif;
+            letter-spacing: -.055em;
+            text-wrap: balance;
+          }
+          .hero-title span {
+            display: block;
+            margin-top: 7px;
+            color: #6f930d;
+            text-shadow: 0 8px 28px rgba(111, 147, 13, .16);
+          }
+          .hero-copy {
+            max-width: 610px;
+            margin: 19px auto 0;
+            color: #5c6657;
+            font-size: 18px;
+            line-height: 1.5;
+          }
+          .hero-pills {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 19px;
+          }
+          .hero-pill {
+            padding: 7px 12px;
+            border: 1px solid #d5ddca;
+            border-radius: 999px;
+            background: rgba(251, 253, 247, .82);
+            color: #4d5848;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 5px 14px rgba(25, 31, 18, .05);
+          }
+          .chat-stage.conversation-active .chat-hero {
+            opacity: 0;
+            visibility: hidden;
+            transform: translate(-50%, -18px) scale(.98);
+          }
           .loading {
             position: absolute;
             inset: 0;
@@ -377,6 +477,10 @@ page = dedent(
             h1 { font-size: 22px; }
             .subtitle { font-size: 14px; }
             .status { display: none; }
+            .chat-hero { top: 94px; width: calc(100% - 44px); padding-inline: 10px; }
+            .hero-title { font-size: clamp(34px, 10vw, 52px); }
+            .hero-copy { max-width: 430px; margin-top: 14px; font-size: 16px; }
+            .hero-pills { margin-top: 14px; }
             .drawer {
               position: absolute;
               inset: 0 auto 0 0;
@@ -406,6 +510,11 @@ page = dedent(
             .topbar { padding-right: 10px; }
             .subtitle { max-width: 225px; }
             .drawer-inner { padding-left: 16px; padding-right: 16px; }
+            .chat-hero { top: 82px; width: calc(100% - 30px); }
+            .hero-kicker { margin-bottom: 11px; font-size: 10px; }
+            .hero-title { font-size: 32px; }
+            .hero-copy { font-size: 14px; }
+            .hero-pills { display: none; }
           }
           @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
@@ -527,6 +636,17 @@ page = dedent(
 
             <section class="chat-stage" id="chat-stage" aria-label="FitBox chat">
               <div class="loading" id="loading" role="status">Loading FitBox assistant…</div>
+              <section class="chat-hero" id="chat-hero" aria-label="FitBox introduction">
+                <div class="hero-kicker">Your training companion</div>
+                <h2 class="hero-title">Train smarter.<span>Move stronger.</span></h2>
+                <p class="hero-copy">Tell FitBox what you want to train, your fitness level, or the equipment you have.</p>
+                <div class="hero-pills" aria-hidden="true">
+                  <span class="hero-pill">Fitness level</span>
+                  <span class="hero-pill">Body part</span>
+                  <span class="hero-pill">Equipment</span>
+                  <span class="hero-pill">Training type</span>
+                </div>
+              </section>
               <df-messenger intent="WELCOME" chat-title="FitBox Assistant" agent-id="__AGENT_ID__" language-code="en" expand></df-messenger>
               <div class="toast" id="toast" role="status" aria-live="polite">Question added — press Enter to send</div>
             </section>
@@ -886,6 +1006,7 @@ page = dedent(
             messageObserver?.disconnect();
             observedMessageList = list;
             messageObserver = new MutationObserver(() => {
+              if (list.querySelector(".user-message")) stage.classList.add("conversation-active");
               themeChatContent();
               scrollToLatest(40);
             });
@@ -992,7 +1113,10 @@ page = dedent(
             const element = event.detail?.element || event.detail || {};
             sendDetailsFromMarker(element.link, event);
           });
-          messenger.addEventListener("df-user-input-entered", () => scrollToLatest(80));
+          messenger.addEventListener("df-user-input-entered", () => {
+            stage.classList.add("conversation-active");
+            scrollToLatest(80);
+          });
           messenger.addEventListener("df-response-received", () => scrollToLatest(220));
           window.addEventListener("resize", fitChatToPanel);
           new ResizeObserver(fitChatToPanel).observe(stage);

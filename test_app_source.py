@@ -148,6 +148,17 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             self.assertIn(text, SOURCE)
         self.assertNotIn("FITBOX_VIEW_DETAILS", SOURCE)
 
+    def test_initial_chat_hero_fills_empty_space_then_hides(self) -> None:
+        for text in (
+            'class="chat-hero"',
+            "Your training companion",
+            "Train smarter.",
+            "Move stronger.",
+            ".chat-stage.conversation-active .chat-hero",
+            'stage.classList.add("conversation-active")',
+        ):
+            self.assertIn(text, SOURCE)
+
     def test_script_block_is_present_once(self) -> None:
         self.assertEqual(len(re.findall(r"<script>", SOURCE)), 1)
         self.assertEqual(len(re.findall(r"</script>", SOURCE)), 2)
