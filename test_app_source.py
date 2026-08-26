@@ -128,20 +128,14 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         ):
             self.assertIn(selector, SOURCE)
 
-    def test_view_details_button_sends_a_normal_ai_question(self) -> None:
+    def test_view_details_button_uses_dialogflow_event_without_duplicate_send(self) -> None:
         for text in (
             "function findSendControl()",
             "function sendPrompt(value)",
-            'window.addEventListener("df-button-clicked"',
-            'eventName !== "FITBOX_VIEW_DETAILS"',
-            "event.stopImmediatePropagation()",
-            "capture: true",
-            "event.preventDefault()",
-            "parameters.exercise_name",
-            "sendPrompt(query)",
             "detailSendLockedUntil = Date.now() + 1000",
         ):
             self.assertIn(text, SOURCE)
+        self.assertNotIn('df-button-clicked', SOURCE)
 
     def test_script_block_is_present_once(self) -> None:
         self.assertEqual(len(re.findall(r"<script>", SOURCE)), 1)
