@@ -57,9 +57,12 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         self.assertIn('openButton.style.setProperty("display", "none", "important")', SOURCE)
         self.assertNotIn('chat.style.setProperty("inset", "12px", "important")', SOURCE)
 
-    def test_compact_header_moves_chat_upward(self) -> None:
-        self.assertIn("padding: 10px 18px;", SOURCE)
-        self.assertNotIn("padding: 18px 24px;", SOURCE)
+    def test_larger_ui_remains_viewport_based(self) -> None:
+        self.assertIn("--drawer-width: 380px", SOURCE)
+        self.assertIn("padding: 12px 22px;", SOURCE)
+        self.assertIn('font: 800 22px/1.2 "Manrope"', SOURCE)
+        self.assertIn("font-size: 16px !important;", SOURCE)
+        self.assertIn("fitbox-input-theme", SOURCE)
 
     def test_streamlit_wrappers_cannot_create_vertical_whitespace(self) -> None:
         self.assertIn('[data-testid="stMain"]', SOURCE)

@@ -86,7 +86,7 @@ page = dedent(
             --lime-dark: #6f930d;
             --paper: #fbfcf7;
             --line: #dfe4d8;
-            --drawer-width: 332px;
+            --drawer-width: 380px;
             --card-shadow: 0 8px 24px rgba(25, 31, 18, .08);
           }
           * { box-sizing: border-box; }
@@ -97,6 +97,7 @@ page = dedent(
             background: #eef1e8;
             color: var(--ink);
             font-family: "DM Sans", system-ui, sans-serif;
+            font-size: 16px;
           }
           button, select, input { font: inherit; }
           button:focus-visible, select:focus-visible, input:focus-visible {
@@ -119,30 +120,30 @@ page = dedent(
             align-items: center;
             justify-content: space-between;
             gap: 18px;
-            padding: 10px 18px;
+            padding: 12px 22px;
             background: #171b14;
             color: white;
           }
           .brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
           .mark {
-            width: 40px;
-            height: 40px;
-            flex: 0 0 40px;
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
             display: grid;
             place-items: center;
             border-radius: 13px;
             background: var(--lime);
             color: #11150e;
-            font-size: 23px;
+            font-size: 27px;
           }
-          h1 { margin: 0; font: 800 19px/1.2 "Manrope", sans-serif; }
-          .subtitle { margin-top: 3px; color: #b9c0b4; font-size: 12px; }
+          h1 { margin: 0; font: 800 22px/1.2 "Manrope", sans-serif; }
+          .subtitle { margin-top: 4px; color: #b9c0b4; font-size: 14px; }
           .status {
             display: flex;
             align-items: center;
             gap: 8px;
             color: #dce3d7;
-            font-size: 12px;
+            font-size: 14px;
             white-space: nowrap;
           }
           .dot {
@@ -188,7 +189,7 @@ page = dedent(
             width: var(--drawer-width);
             height: 100%;
             overflow-y: auto;
-            padding: 66px 20px 24px;
+            padding: 76px 24px 28px;
             scrollbar-width: thin;
             scrollbar-color: #c9d0c1 transparent;
           }
@@ -197,8 +198,8 @@ page = dedent(
             top: 72px;
             left: 12px;
             z-index: 6;
-            width: 42px;
-            height: 42px;
+            width: 48px;
+            height: 48px;
             display: grid;
             place-items: center;
             border: 1px solid #c8d0c0;
@@ -206,7 +207,7 @@ page = dedent(
             background: #171b14;
             color: var(--lime);
             box-shadow: 0 8px 18px rgba(21, 26, 18, .15);
-            font-size: 27px;
+            font-size: 31px;
             line-height: 1;
             cursor: pointer;
             transition: left .24s ease, top .24s ease, background .16s ease, color .16s ease;
@@ -214,39 +215,40 @@ page = dedent(
           .drawer-toggle:hover { background: #252c20; }
           .workspace.drawer-open .drawer-toggle {
             top: 15px;
-            left: calc(var(--drawer-width) - 54px);
+            left: calc(var(--drawer-width) - 62px);
           }
-          .drawer-title { margin: 0; font: 800 20px/1.2 "Manrope", sans-serif; }
-          .drawer-lead { margin: 7px 0 20px; color: var(--muted); font-size: 13px; line-height: 1.5; }
-          .field { margin-top: 15px; }
+          .drawer-title { margin: 0; font: 800 24px/1.2 "Manrope", sans-serif; }
+          .drawer-lead { margin: 9px 0 22px; color: var(--muted); font-size: 15px; line-height: 1.55; }
+          .field { margin-top: 18px; }
           .field label {
             display: block;
             margin-bottom: 6px;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 700;
             color: #323a2d;
           }
           .field select, .field input {
             width: 100%;
-            min-height: 42px;
+            min-height: 48px;
             border: 1px solid #cad2c3;
             border-radius: 10px;
             background: white;
             color: var(--ink);
-            padding: 9px 11px;
+            padding: 11px 13px;
+            font-size: 15px;
           }
           .field input::placeholder { color: #858d80; }
           .step[hidden], .flow-section[hidden] { display: none !important; }
           .prompt-card {
             margin-top: 18px;
-            padding: 13px;
+            padding: 16px;
             border: 1px solid #d5dfc7;
             border-radius: 12px;
             background: #f3f8e8;
           }
           .prompt-label {
             color: var(--lime-dark);
-            font: 800 10px/1.2 "Manrope", sans-serif;
+            font: 800 12px/1.2 "Manrope", sans-serif;
             letter-spacing: .09em;
             text-transform: uppercase;
           }
@@ -254,18 +256,19 @@ page = dedent(
             min-height: 42px;
             margin: 7px 0 11px;
             color: #252d20;
-            font-size: 13px;
+            font-size: 15px;
             line-height: 1.45;
             overflow-wrap: anywhere;
           }
           .use-question {
             width: 100%;
-            min-height: 40px;
+            min-height: 46px;
             border: 0;
             border-radius: 9px;
             background: #171b14;
             color: white;
             font-weight: 700;
+            font-size: 15px;
             cursor: pointer;
           }
           .use-question:hover:not(:disabled) { background: #2a3224; }
@@ -275,17 +278,17 @@ page = dedent(
             padding-top: 18px;
             border-top: 1px solid var(--line);
           }
-          .examples h3 { margin: 0 0 10px; font-size: 13px; }
-          .example-list { display: grid; gap: 7px; }
+          .examples h3 { margin: 0 0 12px; font-size: 15px; }
+          .example-list { display: grid; gap: 9px; }
           .example {
             width: 100%;
             border: 1px solid #d1d8ca;
             border-radius: 9px;
-            padding: 9px 10px;
+            padding: 11px 12px;
             background: white;
             color: #333b2e;
             text-align: left;
-            font-size: 11px;
+            font-size: 14px;
             line-height: 1.35;
             cursor: pointer;
           }
@@ -319,7 +322,7 @@ page = dedent(
             display: grid;
             place-items: center;
             color: var(--muted);
-            font-size: 13px;
+            font-size: 15px;
           }
           df-messenger {
             --df-messenger-bot-message: #ffffff;
@@ -348,21 +351,21 @@ page = dedent(
             pointer-events: none;
             width: max-content;
             max-width: calc(100% - 32px);
-            padding: 9px 13px;
+            padding: 11px 15px;
             border-radius: 10px;
             background: #171b14;
             color: white;
             text-align: center;
-            font-size: 12px;
+            font-size: 14px;
             transition: .2s ease;
           }
           .toast.show { opacity: 1; transform: translate(-50%, 0); }
           @media (max-width: 760px) {
             .shell { height: 100vh; border-radius: 0; }
-            .topbar { padding: 8px 12px; }
-            .mark { width: 36px; height: 36px; flex-basis: 36px; font-size: 19px; }
-            h1 { font-size: 16px; }
-            .subtitle { font-size: 10px; }
+            .topbar { padding: 10px 14px; }
+            .mark { width: 42px; height: 42px; flex-basis: 42px; font-size: 23px; }
+            h1 { font-size: 19px; }
+            .subtitle { font-size: 12px; }
             .status { display: none; }
             .drawer {
               position: absolute;
@@ -714,12 +717,15 @@ page = dedent(
                     scrollbar-gutter: stable;
                     overscroll-behavior: contain;
                     scroll-behavior: smooth;
-                    padding: 16px !important;
+                    padding: 20px !important;
+                  }
+                  #messageList .message {
+                    font-size: 16px !important;
                   }
                   #messageList .message.bot-message {
-                    max-width: min(620px, calc(100% - 24px)) !important;
+                    max-width: min(720px, calc(100% - 28px)) !important;
                     margin-right: 24px !important;
-                    padding: 11px 15px !important;
+                    padding: 14px 18px !important;
                     border: 1px solid #dfe4d8;
                     border-radius: 14px !important;
                     box-shadow: 0 5px 16px rgba(25, 31, 18, .06);
@@ -733,20 +739,20 @@ page = dedent(
                   #messageList .message.user-message {
                     display: block !important;
                     width: fit-content !important;
-                    max-width: min(620px, calc(100% - 24px)) !important;
+                    max-width: min(720px, calc(100% - 28px)) !important;
                     margin-left: auto !important;
                     margin-right: 8px !important;
-                    padding: 10px 15px !important;
+                    padding: 13px 18px !important;
                     border-radius: 14px !important;
                   }
                   #messageList df-card {
                     align-self: flex-start;
                     display: block;
-                    width: min(560px, calc(100% - 12px));
+                    width: min(650px, calc(100% - 12px));
                     max-width: calc(100% - 12px);
                   }
                   @media (max-width: 520px) {
-                    #messageList { padding: 10px !important; }
+                    #messageList { padding: 12px !important; }
                     #messageList df-card { width: 100%; max-width: 100%; }
                     #messageList .message.bot-message { max-width: calc(100% - 8px) !important; margin-left: 8px !important; margin-right: 8px !important; }
                     #messageList .message.user-message { max-width: calc(100% - 8px) !important; margin-left: auto !important; margin-right: 4px !important; }
@@ -768,18 +774,18 @@ page = dedent(
               if (nestedRoot.host?.localName === "df-description") {
                 ensureShadowStyle(nestedRoot, "fitbox-description-theme", `
                   #descriptionWrapper {
-                    padding: 15px 16px !important;
+                    padding: 18px 19px !important;
                     background: #ffffff !important;
                     border-radius: 0 !important;
                     font-family: "DM Sans", system-ui, sans-serif !important;
                   }
                   .title {
                     color: #151a12 !important;
-                    font: 800 15px/1.35 "Manrope", system-ui, sans-serif !important;
+                    font: 800 18px/1.35 "Manrope", system-ui, sans-serif !important;
                   }
                   .description-line {
                     color: #4d5748 !important;
-                    font-size: 13px !important;
+                    font-size: 15px !important;
                     line-height: 1.45 !important;
                     padding-top: 6px !important;
                   }
@@ -788,17 +794,23 @@ page = dedent(
               if (nestedRoot.host?.localName === "df-accordion") {
                 ensureShadowStyle(nestedRoot, "fitbox-accordion-theme", `
                   #dfAccordionWrapper {
-                    padding: 13px 16px !important;
+                    padding: 16px 19px !important;
                     background: #f7faef !important;
                     border-top: 1px solid #dfe7d4;
                     border-radius: 0 !important;
                     color: #151a12 !important;
                     font-family: "DM Sans", system-ui, sans-serif !important;
                   }
-                  #dfAccordionWrapper #title { color: #151a12 !important; font-weight: 700 !important; }
-                  #dfAccordionWrapper #subtitle { color: #687064 !important; }
+                  #dfAccordionWrapper #title { color: #151a12 !important; font-size: 16px !important; font-weight: 700 !important; }
+                  #dfAccordionWrapper #subtitle { color: #687064 !important; font-size: 14px !important; }
                   #dfAccordionWrapper #expandIcon { color: #6f930d !important; }
-                  #dfAccordionWrapper #text { color: #384233 !important; line-height: 1.55 !important; }
+                  #dfAccordionWrapper #text { color: #384233 !important; font-size: 15px !important; line-height: 1.6 !important; }
+                `);
+              }
+              if (nestedRoot.host?.localName === "df-messenger-user-input") {
+                ensureShadowStyle(nestedRoot, "fitbox-input-theme", `
+                  input, textarea { font-size: 16px !important; }
+                  .input-container { min-height: 58px !important; }
                 `);
               }
             });
