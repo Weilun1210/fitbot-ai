@@ -762,17 +762,42 @@ page = dedent(
               if (nestedRoot.host?.localName === "df-accordion") {
                 ensureShadowStyle(nestedRoot, "fitbox-accordion-theme", `
                   #dfAccordionWrapper {
-                    padding: 19px 23px !important;
-                    background: #f7faef !important;
+                    padding: 20px 23px !important;
+                    background: linear-gradient(180deg, #fbfdf7 0%, #f5f9ec 100%) !important;
                     border-top: 1px solid #dfe7d4;
                     border-radius: 0 !important;
                     color: #151a12 !important;
                     font-family: "DM Sans", system-ui, sans-serif !important;
                   }
-                  #dfAccordionWrapper #title { color: #151a12 !important; font-size: 18px !important; font-weight: 700 !important; }
-                  #dfAccordionWrapper #subtitle { color: #687064 !important; font-size: 16px !important; }
-                  #dfAccordionWrapper #expandIcon { color: #6f930d !important; }
-                  #dfAccordionWrapper #text { color: #384233 !important; font-size: 17px !important; line-height: 1.6 !important; }
+                  #dfAccordionWrapper #title {
+                    color: #151a12 !important;
+                    font-size: 19px !important;
+                    font-weight: 800 !important;
+                    letter-spacing: -.01em !important;
+                  }
+                  #dfAccordionWrapper #subtitle {
+                    margin-top: 4px !important;
+                    color: #66705f !important;
+                    font-size: 16px !important;
+                  }
+                  #dfAccordionWrapper #expandIcon {
+                    color: #6f930d !important;
+                    filter: drop-shadow(0 2px 3px rgba(111, 147, 13, .18));
+                  }
+                  #dfAccordionWrapper #text {
+                    margin-top: 14px !important;
+                    padding: 15px 18px !important;
+                    border: 1px solid #d6dfca !important;
+                    border-left: 4px solid #b8f22e !important;
+                    border-radius: 12px !important;
+                    background: rgba(255, 255, 255, .92) !important;
+                    box-shadow: 0 6px 18px rgba(25, 31, 18, .06) !important;
+                    color: #34402f !important;
+                    font-size: 17px !important;
+                    font-weight: 600 !important;
+                    line-height: 1.85 !important;
+                    white-space: pre-line !important;
+                  }
                 `);
               }
               if (nestedRoot.host?.localName === "df-messenger-user-input") {

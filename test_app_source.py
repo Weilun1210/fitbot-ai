@@ -119,6 +119,9 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             'nestedRoot.host?.localName === "df-accordion"',
             "border-left: 4px solid #b8f22e",
             "fitbox-card-theme",
+            "white-space: pre-line !important",
+            "border-left: 4px solid #b8f22e !important",
+            "line-height: 1.85 !important",
         ):
             self.assertIn(selector, SOURCE)
 
