@@ -23,6 +23,7 @@ type, or combinations of those filters. Exercise records come from
   exercise type, or a strict combination of those fields.
 - Details for a named exercise, including its description and metadata.
 - Welcome, goodbye, and a concise fallback response.
+- A dedicated Help intent that explains supported questions and gives an example.
 - Native Dialogflow Messenger cards with an expandable instruction section.
 - **View details** sends a visible `Tell me about {exercise}` user message,
   stays in the current page, then the assistant answers with the existing

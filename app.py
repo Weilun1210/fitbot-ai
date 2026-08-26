@@ -514,6 +514,7 @@ page = dedent(
                 <section class="examples" aria-labelledby="examples-title">
                   <h3 id="examples-title">Example questions</h3>
                   <div class="example-list">
+                    <button class="example" type="button" data-prompt="How do I use FitBox?">How do I use FitBox?</button>
                     <button class="example" type="button" data-prompt="Show me beginner exercises">Show me beginner exercises</button>
                     <button class="example" type="button" data-prompt="Show me exercises using dumbbells">Show me exercises using dumbbells</button>
                     <button class="example" type="button" data-prompt="Show me strength exercises">Show me strength exercises</button>

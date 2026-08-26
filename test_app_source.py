@@ -67,6 +67,7 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
 
     def test_question_guide_matches_dialogflow_training(self) -> None:
         for phrase in (
+            "How do I use FitBox?",
             "Recommend exercises",
             "Show me beginner exercises",
             "Show me exercises using dumbbells",
