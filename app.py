@@ -963,6 +963,21 @@ page = dedent(
           window.setInterval(() => { themeChatContent(); observeMessageList(); }, 700);
           window.addEventListener("dfMessengerLoaded", () => { fitChatToPanel(); scrollToLatest(120); });
           messenger.addEventListener("df-messenger-loaded", () => { fitChatToPanel(); scrollToLatest(120); });
+          messenger.addEventListener("df-button-clicked", (event) => {
+            const element = event.detail?.element || event.detail || {};
+            const link = String(element.link || "");
+            const marker = "#fitbox-view-details=";
+            const markerIndex = link.indexOf(marker);
+            if (markerIndex < 0) return;
+            event.preventDefault();
+            event.stopPropagation();
+            const encodedTitle = link.slice(markerIndex + marker.length);
+            let title = "";
+            try { title = decodeURIComponent(encodedTitle).trim(); }
+            catch (_error) { return; }
+            if (!title) return;
+            sendPrompt(`Tell me about ${title}`);
+          });
           messenger.addEventListener("df-user-input-entered", () => scrollToLatest(80));
           messenger.addEventListener("df-response-received", () => scrollToLatest(220));
           window.addEventListener("resize", fitChatToPanel);

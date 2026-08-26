@@ -128,14 +128,19 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         ):
             self.assertIn(selector, SOURCE)
 
-    def test_view_details_button_uses_dialogflow_event_without_duplicate_send(self) -> None:
+    def test_view_details_button_sends_visible_user_question_once(self) -> None:
         for text in (
             "function findSendControl()",
             "function sendPrompt(value)",
             "detailSendLockedUntil = Date.now() + 1000",
+            'messenger.addEventListener("df-button-clicked"',
+            'const marker = "#fitbox-view-details="',
+            "decodeURIComponent(encodedTitle)",
+            "sendPrompt(`Tell me about ${title}`)",
+            "event.preventDefault()",
         ):
             self.assertIn(text, SOURCE)
-        self.assertNotIn('df-button-clicked', SOURCE)
+        self.assertNotIn("FITBOX_VIEW_DETAILS", SOURCE)
 
     def test_script_block_is_present_once(self) -> None:
         self.assertEqual(len(re.findall(r"<script>", SOURCE)), 1)
