@@ -965,18 +965,20 @@ page = dedent(
           messenger.addEventListener("df-messenger-loaded", () => { fitChatToPanel(); scrollToLatest(120); });
           messenger.addEventListener("df-user-input-entered", () => scrollToLatest(80));
           messenger.addEventListener("df-response-received", () => scrollToLatest(220));
-          messenger.addEventListener("df-button-clicked", (event) => {
+          window.addEventListener("df-button-clicked", (event) => {
             const detail = event.detail || {};
             const element = detail.element || detail;
             const action = element.event || detail.event || {};
             const eventName = typeof action === "string" ? action : action.name;
             if (eventName !== "FITBOX_VIEW_DETAILS") return;
             event.preventDefault();
+            event.stopImmediatePropagation();
+            event.stopPropagation();
             const parameters = action.parameters || element.parameters || {};
             const title = parameters.exercise_name || "";
             const query = parameters.query || (title ? `Tell me about ${title}` : "");
-            sendPrompt(query);
-          });
+            window.setTimeout(() => sendPrompt(query), 0);
+          }, { capture: true });
           window.addEventListener("resize", fitChatToPanel);
           new ResizeObserver(fitChatToPanel).observe(stage);
         </script>

@@ -132,8 +132,10 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         for text in (
             "function findSendControl()",
             "function sendPrompt(value)",
-            'messenger.addEventListener("df-button-clicked"',
+            'window.addEventListener("df-button-clicked"',
             'eventName !== "FITBOX_VIEW_DETAILS"',
+            "event.stopImmediatePropagation()",
+            "capture: true",
             "event.preventDefault()",
             "parameters.exercise_name",
             "sendPrompt(query)",
