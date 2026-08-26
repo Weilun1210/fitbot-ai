@@ -14,7 +14,7 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
     def test_visible_copy_is_natural(self) -> None:
         self.assertIn("Personalised exercise discovery", SOURCE)
         self.assertIn(
-            "Choose what you want to find. FitBox will prepare a question for you.",
+            "Choose a supported question. FitBox will prepare the exact wording for you.",
             SOURCE,
         )
         self.assertNotIn("Dataset-based exercise discovery", SOURCE)
@@ -64,6 +64,24 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         self.assertIn("font-size: 18px !important;", SOURCE)
         self.assertIn("min-height: 66px !important;", SOURCE)
         self.assertIn("fitbox-input-theme", SOURCE)
+
+    def test_question_guide_matches_dialogflow_training(self) -> None:
+        for phrase in (
+            "Recommend exercises",
+            "Show me beginner exercises",
+            "Show me exercises using dumbbells",
+            "Show me strength exercises",
+            "Recommend beginner chest exercises using dumbbells",
+            "Show me expert barbell strength exercises",
+            "Find intermediate stretching exercises for lower back",
+            "Tell me about Partner plank band row",
+        ):
+            self.assertIn(phrase, SOURCE)
+        self.assertIn('id="tested-combination"', SOURCE)
+        self.assertIn('id="exercise-name"', SOURCE)
+        self.assertNotIn('id="personalised-flow"', SOURCE)
+        self.assertNotIn('id="exercise-name" type="text"', SOURCE)
+        self.assertNotIn("buildPersonalisedPrompt", SOURCE)
 
     def test_streamlit_wrappers_cannot_create_vertical_whitespace(self) -> None:
         self.assertIn('[data-testid="stMain"]', SOURCE)

@@ -238,6 +238,16 @@ page = dedent(
             font-size: 17px;
           }
           .field input::placeholder { color: #858d80; }
+          .flow-note {
+            margin: 18px 0 0;
+            padding: 14px 16px;
+            border-left: 4px solid var(--lime);
+            border-radius: 9px;
+            background: #f3f8e8;
+            color: #44503d;
+            font-size: 16px;
+            line-height: 1.45;
+          }
           .step[hidden], .flow-section[hidden] { display: none !important; }
           .prompt-card {
             margin-top: 21px;
@@ -424,56 +434,24 @@ page = dedent(
             <aside class="drawer" id="question-guide" aria-label="AI question guide" aria-hidden="true">
               <div class="drawer-inner">
                 <h2 class="drawer-title">Build a question</h2>
-                <p class="drawer-lead">Choose what you want to find. FitBox will prepare a question for you.</p>
+                <p class="drawer-lead">Choose a supported question. FitBox will prepare the exact wording for you.</p>
 
                 <div class="field">
                   <label for="question-category">What would you like to ask?</label>
                   <select id="question-category">
                     <option value="">Choose a category</option>
-                    <option value="personalised">Personalised recommendation</option>
+                    <option value="general_recommendation">General exercise recommendation</option>
                     <option value="body_part">Search by body part</option>
                     <option value="equipment">Search by equipment</option>
                     <option value="fitness_level">Search by fitness level</option>
                     <option value="exercise_type">Search by exercise type</option>
+                    <option value="tested_combination">Tested combined recommendation</option>
                     <option value="exercise_details">Exercise details</option>
                   </select>
                 </div>
 
-                <section class="flow-section" id="personalised-flow" hidden aria-label="Personalised recommendation options">
-                  <div class="field step" id="step-level">
-                    <label for="personal-level">1. Fitness level</label>
-                    <select id="personal-level">
-                      <option value="">Choose a level</option><option value="Any">Any level</option>
-                      <option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Expert">Expert</option>
-                    </select>
-                  </div>
-                  <div class="field step" id="step-body" hidden>
-                    <label for="personal-body">2. Body part</label>
-                    <select id="personal-body">
-                      <option value="">Choose a body part</option><option value="Any">Any body part</option>
-                      <option>Abdominals</option><option>Abductors</option><option>Adductors</option><option>Biceps</option><option>Calves</option>
-                      <option>Chest</option><option>Forearms</option><option>Glutes</option><option>Hamstrings</option><option>Lats</option>
-                      <option>Lower Back</option><option>Middle Back</option><option>Neck</option><option>Quadriceps</option><option>Shoulders</option>
-                      <option>Traps</option><option>Triceps</option>
-                    </select>
-                  </div>
-                  <div class="field step" id="step-equipment" hidden>
-                    <label for="personal-equipment">3. Equipment</label>
-                    <select id="personal-equipment">
-                      <option value="">Choose equipment</option><option value="Any">Any equipment</option>
-                      <option>Bands</option><option>Barbell</option><option>Body Only</option><option>Cable</option><option>Dumbbell</option>
-                      <option>E-Z Curl Bar</option><option>Exercise Ball</option><option>Foam Roll</option><option>Kettlebells</option>
-                      <option>Machine</option><option>Medicine Ball</option><option>None</option><option>Other</option>
-                    </select>
-                  </div>
-                  <div class="field step" id="step-type" hidden>
-                    <label for="personal-type">4. Exercise type</label>
-                    <select id="personal-type">
-                      <option value="">Choose an exercise type</option><option value="Any">Any type</option>
-                      <option>Cardio</option><option>Olympic Weightlifting</option><option>Plyometrics</option><option>Powerlifting</option>
-                      <option>Strength</option><option>Stretching</option><option>Strongman</option>
-                    </select>
-                  </div>
+                <section class="flow-section" id="general_recommendation-flow" hidden aria-label="General exercise recommendation">
+                  <p class="flow-note">This uses the trained phrase “Recommend exercises”.</p>
                 </section>
 
                 <section class="flow-section" id="body_part-flow" hidden>
@@ -502,10 +480,29 @@ page = dedent(
                     <option>Plyometrics</option><option>Powerlifting</option><option>Strength</option><option>Stretching</option><option>Strongman</option>
                   </select></div>
                 </section>
+                <section class="flow-section" id="tested_combination-flow" hidden>
+                  <div class="field"><label for="tested-combination">Verified combination</label><select id="tested-combination">
+                    <option value="">Choose a tested question</option>
+                    <option value="Recommend beginner chest exercises using dumbbells">Beginner · Chest · Dumbbell</option>
+                    <option value="Show me expert barbell strength exercises">Expert · Barbell · Strength</option>
+                    <option value="Find intermediate stretching exercises for lower back">Intermediate · Lower Back · Stretching</option>
+                    <option value="Recommend dumbbell exercises for shoulders">Shoulders · Dumbbell</option>
+                    <option value="Suggest beginner bodyweight exercises">Beginner · Bodyweight</option>
+                    <option value="Find intermediate strength exercises">Intermediate · Strength</option>
+                  </select></div>
+                </section>
                 <section class="flow-section" id="exercise_details-flow" hidden>
-                  <div class="field"><label for="exercise-name">Exercise name</label>
-                    <input id="exercise-name" type="text" autocomplete="off" placeholder="e.g. Partner plank band row" />
-                  </div>
+                  <div class="field"><label for="exercise-name">Recognised exercise</label><select id="exercise-name">
+                    <option value="">Choose an exercise</option>
+                    <option>Partner plank band row</option>
+                    <option>Crunch</option>
+                    <option>Barbell Bench Press - Medium Grip</option>
+                    <option>Dumbbell Bicep Curl</option>
+                    <option>Pushups</option>
+                    <option>Deadlift with Bands</option>
+                    <option>Pullups</option>
+                    <option>Barbell Full Squat</option>
+                  </select></div>
                 </section>
 
                 <div class="prompt-card" id="prompt-card" hidden>
@@ -517,9 +514,10 @@ page = dedent(
                 <section class="examples" aria-labelledby="examples-title">
                   <h3 id="examples-title">Example questions</h3>
                   <div class="example-list">
-                    <button class="example" type="button" data-prompt="Give me beginner chest exercises">Give me beginner chest exercises</button>
+                    <button class="example" type="button" data-prompt="Show me beginner exercises">Show me beginner exercises</button>
                     <button class="example" type="button" data-prompt="Show me exercises using dumbbells">Show me exercises using dumbbells</button>
                     <button class="example" type="button" data-prompt="Show me strength exercises">Show me strength exercises</button>
+                    <button class="example" type="button" data-prompt="Recommend beginner chest exercises using dumbbells">Recommend beginner chest exercises using dumbbells</button>
                     <button class="example" type="button" data-prompt="Tell me about Partner plank band row">Tell me about Partner plank band row</button>
                   </div>
                 </section>
@@ -548,17 +546,11 @@ page = dedent(
           const promptCard = document.getElementById("prompt-card");
           const promptPreview = document.getElementById("prompt-preview");
           const useQuestion = document.getElementById("use-question");
-          const personalLevel = document.getElementById("personal-level");
-          const personalBody = document.getElementById("personal-body");
-          const personalEquipment = document.getElementById("personal-equipment");
-          const personalType = document.getElementById("personal-type");
-          const stepBody = document.getElementById("step-body");
-          const stepEquipment = document.getElementById("step-equipment");
-          const stepType = document.getElementById("step-type");
           const singleBody = document.getElementById("single-body");
           const singleEquipment = document.getElementById("single-equipment");
           const singleLevel = document.getElementById("single-level");
           const singleType = document.getElementById("single-type");
+          const testedCombination = document.getElementById("tested-combination");
           const exerciseName = document.getElementById("exercise-name");
           let currentPrompt = "";
           let toastTimer;
@@ -617,23 +609,9 @@ page = dedent(
             };
             return phrases[value] || `using ${value.toLowerCase()}`;
           }
-          function buildPersonalisedPrompt() {
-            const values = [personalLevel.value, personalBody.value, personalEquipment.value, personalType.value];
-            if (values.some((value) => !value)) { updatePrompt(""); return; }
-            const words = ["Recommend"];
-            if (personalLevel.value !== "Any") words.push(personalLevel.value.toLowerCase());
-            if (personalType.value !== "Any") words.push(personalType.value.toLowerCase());
-            words.push("exercises");
-            let prompt = words.join(" ");
-            if (personalBody.value !== "Any") prompt += ` for ${personalBody.value.toLowerCase()}`;
-            if (personalEquipment.value !== "Any") prompt += ` ${equipmentPhrase(personalEquipment.value)}`;
-            updatePrompt(prompt);
-          }
           function resetFlowValues() {
-            [personalLevel, personalBody, personalEquipment, personalType, singleBody, singleEquipment, singleLevel, singleType]
+            [singleBody, singleEquipment, singleLevel, singleType, testedCombination, exerciseName]
               .forEach((select) => { select.value = ""; });
-            exerciseName.value = "";
-            stepBody.hidden = true; stepEquipment.hidden = true; stepType.hidden = true;
             updatePrompt("");
           }
           category.addEventListener("change", () => {
@@ -642,25 +620,15 @@ page = dedent(
             if (category.value) {
               document.getElementById(`${category.value}-flow`).hidden = false;
               promptCard.hidden = false;
+              if (category.value === "general_recommendation") updatePrompt("Recommend exercises");
             }
           });
-          personalLevel.addEventListener("change", () => {
-            personalBody.value = ""; personalEquipment.value = ""; personalType.value = "";
-            stepBody.hidden = !personalLevel.value; stepEquipment.hidden = true; stepType.hidden = true; updatePrompt("");
-          });
-          personalBody.addEventListener("change", () => {
-            personalEquipment.value = ""; personalType.value = "";
-            stepEquipment.hidden = !personalBody.value; stepType.hidden = true; updatePrompt("");
-          });
-          personalEquipment.addEventListener("change", () => {
-            personalType.value = ""; stepType.hidden = !personalEquipment.value; updatePrompt("");
-          });
-          personalType.addEventListener("change", buildPersonalisedPrompt);
           singleBody.addEventListener("change", () => updatePrompt(singleBody.value ? `Show me exercises for ${singleBody.value.toLowerCase()}` : ""));
           singleEquipment.addEventListener("change", () => updatePrompt(singleEquipment.value ? `Show me exercises ${equipmentPhrase(singleEquipment.value)}` : ""));
           singleLevel.addEventListener("change", () => updatePrompt(singleLevel.value ? `Show me ${singleLevel.value.toLowerCase()} exercises` : ""));
           singleType.addEventListener("change", () => updatePrompt(singleType.value ? `Show me ${singleType.value.toLowerCase()} exercises` : ""));
-          exerciseName.addEventListener("input", () => {
+          testedCombination.addEventListener("change", () => updatePrompt(testedCombination.value));
+          exerciseName.addEventListener("change", () => {
             const name = exerciseName.value.trim(); updatePrompt(name ? `Tell me about ${name}` : "");
           });
           useQuestion.addEventListener("click", () => {
