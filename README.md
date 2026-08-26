@@ -25,7 +25,8 @@ type, or combinations of those filters. Exercise records come from
 - Welcome, goodbye, and a concise fallback response.
 - Native Dialogflow Messenger cards with an expandable instruction section.
 - **View details** sends a visible `Tell me about {exercise}` user message,
-  then the assistant answers with the existing exercise-details card.
+  stays in the current page, then the assistant answers with the existing
+  exercise-details card.
 
 The interface includes a collapsible question guide. It can build a canonical
 English question from 17 body parts, 13 equipment values, 3

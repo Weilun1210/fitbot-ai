@@ -133,11 +133,16 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             "function findSendControl()",
             "function sendPrompt(value)",
             "detailSendLockedUntil = Date.now() + 1000",
+            'const detailMarker = "#fitbox-view-details="',
+            "function sendDetailsFromMarker(link, event)",
+            'document.addEventListener("click"',
+            "event.composedPath().find",
+            "event?.preventDefault()",
+            "event?.stopImmediatePropagation()",
+            "}, true)",
             'messenger.addEventListener("df-button-clicked"',
-            'const marker = "#fitbox-view-details="',
             "decodeURIComponent(encodedTitle)",
-            "sendPrompt(`Tell me about ${title}`)",
-            "event.preventDefault()",
+            "return sendPrompt(`Tell me about ${title}`)",
         ):
             self.assertIn(text, SOURCE)
         self.assertNotIn("FITBOX_VIEW_DETAILS", SOURCE)

@@ -963,20 +963,33 @@ page = dedent(
           window.setInterval(() => { themeChatContent(); observeMessageList(); }, 700);
           window.addEventListener("dfMessengerLoaded", () => { fitChatToPanel(); scrollToLatest(120); });
           messenger.addEventListener("df-messenger-loaded", () => { fitChatToPanel(); scrollToLatest(120); });
-          messenger.addEventListener("df-button-clicked", (event) => {
-            const element = event.detail?.element || event.detail || {};
-            const link = String(element.link || "");
-            const marker = "#fitbox-view-details=";
+          const detailMarker = "#fitbox-view-details=";
+          function sendDetailsFromMarker(link, event) {
+            link = String(link || "");
+            const marker = detailMarker;
             const markerIndex = link.indexOf(marker);
-            if (markerIndex < 0) return;
-            event.preventDefault();
-            event.stopPropagation();
+            if (markerIndex < 0) return false;
+            event?.preventDefault();
+            event?.stopImmediatePropagation();
             const encodedTitle = link.slice(markerIndex + marker.length);
             let title = "";
             try { title = decodeURIComponent(encodedTitle).trim(); }
-            catch (_error) { return; }
-            if (!title) return;
-            sendPrompt(`Tell me about ${title}`);
+            catch (_error) { return false; }
+            if (!title) return false;
+            return sendPrompt(`Tell me about ${title}`);
+          }
+          document.addEventListener("click", (event) => {
+            const markerNode = event.composedPath().find((node) => {
+              if (!node || typeof node.getAttribute !== "function") return false;
+              return String(node.getAttribute("href") || node.getAttribute("link") || "").includes(detailMarker);
+            });
+            if (!markerNode) return;
+            const link = markerNode.getAttribute("href") || markerNode.getAttribute("link");
+            sendDetailsFromMarker(link, event);
+          }, true);
+          messenger.addEventListener("df-button-clicked", (event) => {
+            const element = event.detail?.element || event.detail || {};
+            sendDetailsFromMarker(element.link, event);
           });
           messenger.addEventListener("df-user-input-entered", () => scrollToLatest(80));
           messenger.addEventListener("df-response-received", () => scrollToLatest(220));
