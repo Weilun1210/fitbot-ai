@@ -146,6 +146,29 @@ page = dedent(
             font-size: 16px;
             white-space: nowrap;
           }
+          .topbar-actions { display: flex; align-items: center; gap: 16px; }
+          .clear-chat {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 40px;
+            padding: 8px 13px;
+            border: 1px solid rgba(255, 255, 255, .2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .07);
+            color: #f5f8f2;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .16s ease, border-color .16s ease, transform .16s ease;
+          }
+          .clear-chat:hover {
+            border-color: rgba(184, 242, 46, .6);
+            background: rgba(184, 242, 46, .12);
+            transform: translateY(-1px);
+          }
+          .clear-chat:disabled { opacity: .58; cursor: wait; transform: none; }
+          .clear-icon { color: var(--lime); font-size: 20px; line-height: 1; }
           .dot {
             width: 10px;
             height: 10px;
@@ -477,6 +500,8 @@ page = dedent(
             h1 { font-size: 22px; }
             .subtitle { font-size: 14px; }
             .status { display: none; }
+            .topbar-actions { gap: 8px; }
+            .clear-chat { padding: 8px 10px; }
             .chat-hero { top: 94px; width: calc(100% - 44px); padding-inline: 10px; }
             .hero-title { font-size: clamp(34px, 10vw, 52px); }
             .hero-copy { max-width: 430px; margin-top: 14px; font-size: 16px; }
@@ -515,6 +540,7 @@ page = dedent(
             .hero-title { font-size: 32px; }
             .hero-copy { font-size: 14px; }
             .hero-pills { display: none; }
+            .clear-label { display: none; }
           }
           @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
@@ -531,7 +557,13 @@ page = dedent(
                 <div class="subtitle">Personalised exercise discovery</div>
               </div>
             </div>
-            <div class="status"><span class="dot" aria-hidden="true"></span> Dialogflow ES online</div>
+            <div class="topbar-actions">
+              <button class="clear-chat" id="clear-chat" type="button" aria-label="Clear chat and start again">
+                <span class="clear-icon" aria-hidden="true">↻</span>
+                <span class="clear-label">Clear chat</span>
+              </button>
+              <div class="status"><span class="dot" aria-hidden="true"></span> Dialogflow ES online</div>
+            </div>
           </header>
 
           <div class="workspace" id="workspace">
@@ -662,6 +694,7 @@ page = dedent(
           const category = document.getElementById("question-category");
           const messenger = document.querySelector("df-messenger");
           const stage = document.getElementById("chat-stage");
+          const clearChatButton = document.getElementById("clear-chat");
           const loading = document.getElementById("loading");
           const toast = document.getElementById("toast");
           const promptCard = document.getElementById("prompt-card");
@@ -1112,6 +1145,11 @@ page = dedent(
           messenger.addEventListener("df-button-clicked", (event) => {
             const element = event.detail?.element || event.detail || {};
             sendDetailsFromMarker(element.link, event);
+          });
+          clearChatButton.addEventListener("click", () => {
+            clearChatButton.disabled = true;
+            clearChatButton.querySelector(".clear-label").textContent = "Clearing…";
+            window.parent.location.reload();
           });
           messenger.addEventListener("df-user-input-entered", () => {
             stage.classList.add("conversation-active");

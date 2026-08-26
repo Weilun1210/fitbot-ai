@@ -25,6 +25,7 @@ type, or combinations of those filters. Exercise records come from
 - Welcome, goodbye, and a concise fallback response.
 - A dedicated Help intent that explains supported questions and gives an example.
 - A decorated welcome hero that fills the initial chat space and fades after the first user message.
+- A **Clear chat** control that resets the conversation and starts a fresh Messenger session.
 - Native Dialogflow Messenger cards with an expandable instruction section.
 - **View details** sends a visible `Tell me about {exercise}` user message,
   stays in the current page, then the assistant answers with the existing

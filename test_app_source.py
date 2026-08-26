@@ -159,6 +159,16 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         ):
             self.assertIn(text, SOURCE)
 
+    def test_clear_chat_reloads_the_streamlit_app_frame(self) -> None:
+        for text in (
+            'id="clear-chat"',
+            "Clear chat",
+            'clearChatButton.addEventListener("click"',
+            "window.parent.location.reload()",
+            'textContent = "Clearing…"',
+        ):
+            self.assertIn(text, SOURCE)
+
     def test_script_block_is_present_once(self) -> None:
         self.assertEqual(len(re.findall(r"<script>", SOURCE)), 1)
         self.assertEqual(len(re.findall(r"</script>", SOURCE)), 2)
