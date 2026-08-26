@@ -86,7 +86,7 @@ page = dedent(
             --lime-dark: #6f930d;
             --paper: #fbfcf7;
             --line: #dfe4d8;
-            --drawer-width: 380px;
+            --drawer-width: 430px;
             --card-shadow: 0 8px 24px rgba(25, 31, 18, .08);
           }
           * { box-sizing: border-box; }
@@ -97,7 +97,7 @@ page = dedent(
             background: #eef1e8;
             color: var(--ink);
             font-family: "DM Sans", system-ui, sans-serif;
-            font-size: 16px;
+            font-size: 18px;
           }
           button, select, input { font: inherit; }
           button:focus-visible, select:focus-visible, input:focus-visible {
@@ -120,35 +120,35 @@ page = dedent(
             align-items: center;
             justify-content: space-between;
             gap: 18px;
-            padding: 12px 22px;
+            padding: 15px 28px;
             background: #171b14;
             color: white;
           }
-          .brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
+          .brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
           .mark {
-            width: 48px;
-            height: 48px;
-            flex: 0 0 48px;
+            width: 56px;
+            height: 56px;
+            flex: 0 0 56px;
             display: grid;
             place-items: center;
-            border-radius: 13px;
+            border-radius: 15px;
             background: var(--lime);
             color: #11150e;
-            font-size: 27px;
+            font-size: 32px;
           }
-          h1 { margin: 0; font: 800 22px/1.2 "Manrope", sans-serif; }
-          .subtitle { margin-top: 4px; color: #b9c0b4; font-size: 14px; }
+          h1 { margin: 0; font: 800 26px/1.2 "Manrope", sans-serif; }
+          .subtitle { margin-top: 5px; color: #b9c0b4; font-size: 16px; }
           .status {
             display: flex;
             align-items: center;
             gap: 8px;
             color: #dce3d7;
-            font-size: 14px;
+            font-size: 16px;
             white-space: nowrap;
           }
           .dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: var(--lime);
             box-shadow: 0 0 0 4px rgba(184,242,46,.12);
@@ -189,7 +189,7 @@ page = dedent(
             width: var(--drawer-width);
             height: 100%;
             overflow-y: auto;
-            padding: 76px 24px 28px;
+            padding: 86px 28px 32px;
             scrollbar-width: thin;
             scrollbar-color: #c9d0c1 transparent;
           }
@@ -198,16 +198,16 @@ page = dedent(
             top: 72px;
             left: 12px;
             z-index: 6;
-            width: 48px;
-            height: 48px;
+            width: 54px;
+            height: 54px;
             display: grid;
             place-items: center;
             border: 1px solid #c8d0c0;
-            border-radius: 12px;
+            border-radius: 14px;
             background: #171b14;
             color: var(--lime);
             box-shadow: 0 8px 18px rgba(21, 26, 18, .15);
-            font-size: 31px;
+            font-size: 35px;
             line-height: 1;
             cursor: pointer;
             transition: left .24s ease, top .24s ease, background .16s ease, color .16s ease;
@@ -215,80 +215,80 @@ page = dedent(
           .drawer-toggle:hover { background: #252c20; }
           .workspace.drawer-open .drawer-toggle {
             top: 15px;
-            left: calc(var(--drawer-width) - 62px);
+            left: calc(var(--drawer-width) - 70px);
           }
-          .drawer-title { margin: 0; font: 800 24px/1.2 "Manrope", sans-serif; }
-          .drawer-lead { margin: 9px 0 22px; color: var(--muted); font-size: 15px; line-height: 1.55; }
-          .field { margin-top: 18px; }
+          .drawer-title { margin: 0; font: 800 28px/1.2 "Manrope", sans-serif; }
+          .drawer-lead { margin: 11px 0 26px; color: var(--muted); font-size: 17px; line-height: 1.55; }
+          .field { margin-top: 21px; }
           .field label {
             display: block;
-            margin-bottom: 6px;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-size: 16px;
             font-weight: 700;
             color: #323a2d;
           }
           .field select, .field input {
             width: 100%;
-            min-height: 48px;
+            min-height: 54px;
             border: 1px solid #cad2c3;
-            border-radius: 10px;
+            border-radius: 12px;
             background: white;
             color: var(--ink);
-            padding: 11px 13px;
-            font-size: 15px;
+            padding: 13px 15px;
+            font-size: 17px;
           }
           .field input::placeholder { color: #858d80; }
           .step[hidden], .flow-section[hidden] { display: none !important; }
           .prompt-card {
-            margin-top: 18px;
-            padding: 16px;
+            margin-top: 21px;
+            padding: 19px;
             border: 1px solid #d5dfc7;
-            border-radius: 12px;
+            border-radius: 14px;
             background: #f3f8e8;
           }
           .prompt-label {
             color: var(--lime-dark);
-            font: 800 12px/1.2 "Manrope", sans-serif;
+            font: 800 14px/1.2 "Manrope", sans-serif;
             letter-spacing: .09em;
             text-transform: uppercase;
           }
           .prompt-preview {
-            min-height: 42px;
-            margin: 7px 0 11px;
+            min-height: 48px;
+            margin: 9px 0 13px;
             color: #252d20;
-            font-size: 15px;
+            font-size: 17px;
             line-height: 1.45;
             overflow-wrap: anywhere;
           }
           .use-question {
             width: 100%;
-            min-height: 46px;
+            min-height: 52px;
             border: 0;
-            border-radius: 9px;
+            border-radius: 11px;
             background: #171b14;
             color: white;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 17px;
             cursor: pointer;
           }
           .use-question:hover:not(:disabled) { background: #2a3224; }
           .use-question:disabled { opacity: .45; cursor: not-allowed; }
           .examples {
-            margin-top: 22px;
-            padding-top: 18px;
+            margin-top: 26px;
+            padding-top: 21px;
             border-top: 1px solid var(--line);
           }
-          .examples h3 { margin: 0 0 12px; font-size: 15px; }
-          .example-list { display: grid; gap: 9px; }
+          .examples h3 { margin: 0 0 14px; font-size: 17px; }
+          .example-list { display: grid; gap: 11px; }
           .example {
             width: 100%;
             border: 1px solid #d1d8ca;
-            border-radius: 9px;
-            padding: 11px 12px;
+            border-radius: 11px;
+            padding: 13px 14px;
             background: white;
             color: #333b2e;
             text-align: left;
-            font-size: 14px;
+            font-size: 16px;
             line-height: 1.35;
             cursor: pointer;
           }
@@ -322,7 +322,7 @@ page = dedent(
             display: grid;
             place-items: center;
             color: var(--muted);
-            font-size: 15px;
+            font-size: 17px;
           }
           df-messenger {
             --df-messenger-bot-message: #ffffff;
@@ -351,21 +351,21 @@ page = dedent(
             pointer-events: none;
             width: max-content;
             max-width: calc(100% - 32px);
-            padding: 11px 15px;
+            padding: 13px 18px;
             border-radius: 10px;
             background: #171b14;
             color: white;
             text-align: center;
-            font-size: 14px;
+            font-size: 16px;
             transition: .2s ease;
           }
           .toast.show { opacity: 1; transform: translate(-50%, 0); }
           @media (max-width: 760px) {
             .shell { height: 100vh; border-radius: 0; }
-            .topbar { padding: 10px 14px; }
-            .mark { width: 42px; height: 42px; flex-basis: 42px; font-size: 23px; }
-            h1 { font-size: 19px; }
-            .subtitle { font-size: 12px; }
+            .topbar { padding: 12px 16px; }
+            .mark { width: 48px; height: 48px; flex-basis: 48px; font-size: 27px; }
+            h1 { font-size: 22px; }
+            .subtitle { font-size: 14px; }
             .status { display: none; }
             .drawer {
               position: absolute;
@@ -717,17 +717,17 @@ page = dedent(
                     scrollbar-gutter: stable;
                     overscroll-behavior: contain;
                     scroll-behavior: smooth;
-                    padding: 20px !important;
+                    padding: 24px !important;
                   }
                   #messageList .message {
-                    font-size: 16px !important;
+                    font-size: 18px !important;
                   }
                   #messageList .message.bot-message {
-                    max-width: min(720px, calc(100% - 28px)) !important;
-                    margin-right: 24px !important;
-                    padding: 14px 18px !important;
+                    max-width: min(800px, calc(100% - 32px)) !important;
+                    margin-right: 28px !important;
+                    padding: 17px 22px !important;
                     border: 1px solid #dfe4d8;
-                    border-radius: 14px !important;
+                    border-radius: 16px !important;
                     box-shadow: 0 5px 16px rgba(25, 31, 18, .06);
                     line-height: 1.5 !important;
                   }
@@ -739,16 +739,16 @@ page = dedent(
                   #messageList .message.user-message {
                     display: block !important;
                     width: fit-content !important;
-                    max-width: min(720px, calc(100% - 28px)) !important;
+                    max-width: min(800px, calc(100% - 32px)) !important;
                     margin-left: auto !important;
                     margin-right: 8px !important;
-                    padding: 13px 18px !important;
-                    border-radius: 14px !important;
+                    padding: 16px 22px !important;
+                    border-radius: 16px !important;
                   }
                   #messageList df-card {
                     align-self: flex-start;
                     display: block;
-                    width: min(650px, calc(100% - 12px));
+                    width: min(720px, calc(100% - 12px));
                     max-width: calc(100% - 12px);
                   }
                   @media (max-width: 520px) {
@@ -774,18 +774,18 @@ page = dedent(
               if (nestedRoot.host?.localName === "df-description") {
                 ensureShadowStyle(nestedRoot, "fitbox-description-theme", `
                   #descriptionWrapper {
-                    padding: 18px 19px !important;
+                    padding: 21px 23px !important;
                     background: #ffffff !important;
                     border-radius: 0 !important;
                     font-family: "DM Sans", system-ui, sans-serif !important;
                   }
                   .title {
                     color: #151a12 !important;
-                    font: 800 18px/1.35 "Manrope", system-ui, sans-serif !important;
+                    font: 800 21px/1.35 "Manrope", system-ui, sans-serif !important;
                   }
                   .description-line {
                     color: #4d5748 !important;
-                    font-size: 15px !important;
+                    font-size: 17px !important;
                     line-height: 1.45 !important;
                     padding-top: 6px !important;
                   }
@@ -794,23 +794,23 @@ page = dedent(
               if (nestedRoot.host?.localName === "df-accordion") {
                 ensureShadowStyle(nestedRoot, "fitbox-accordion-theme", `
                   #dfAccordionWrapper {
-                    padding: 16px 19px !important;
+                    padding: 19px 23px !important;
                     background: #f7faef !important;
                     border-top: 1px solid #dfe7d4;
                     border-radius: 0 !important;
                     color: #151a12 !important;
                     font-family: "DM Sans", system-ui, sans-serif !important;
                   }
-                  #dfAccordionWrapper #title { color: #151a12 !important; font-size: 16px !important; font-weight: 700 !important; }
-                  #dfAccordionWrapper #subtitle { color: #687064 !important; font-size: 14px !important; }
+                  #dfAccordionWrapper #title { color: #151a12 !important; font-size: 18px !important; font-weight: 700 !important; }
+                  #dfAccordionWrapper #subtitle { color: #687064 !important; font-size: 16px !important; }
                   #dfAccordionWrapper #expandIcon { color: #6f930d !important; }
-                  #dfAccordionWrapper #text { color: #384233 !important; font-size: 15px !important; line-height: 1.6 !important; }
+                  #dfAccordionWrapper #text { color: #384233 !important; font-size: 17px !important; line-height: 1.6 !important; }
                 `);
               }
               if (nestedRoot.host?.localName === "df-messenger-user-input") {
                 ensureShadowStyle(nestedRoot, "fitbox-input-theme", `
-                  input, textarea { font-size: 16px !important; }
-                  .input-container { min-height: 58px !important; }
+                  input, textarea { font-size: 18px !important; }
+                  .input-container { min-height: 66px !important; }
                 `);
               }
             });
