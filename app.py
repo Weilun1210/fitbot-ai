@@ -582,7 +582,14 @@ page = dedent(
             const userInput = findChat()?.shadowRoot?.querySelector("df-messenger-user-input");
             return userInput?.shadowRoot?.querySelector('input[aria-label="Talk to Agent"], input');
           }
-          function setPrompt(value) {
+          function findSendControl() {
+            const userInput = findChat()?.shadowRoot?.querySelector("df-messenger-user-input");
+            const root = userInput?.shadowRoot;
+            return root?.querySelector(
+              'button[aria-label="Send"], [role="button"][aria-label="Send"], #sendIcon, .send-button'
+            );
+          }
+          function setPrompt(value, notify = true) {
             const input = findInput();
             if (!input) { showToast("Chat is still loading — try again in a moment"); return false; }
             const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
@@ -590,7 +597,26 @@ page = dedent(
             input.dispatchEvent(new InputEvent("input", { bubbles: true, composed: true, data: value, inputType: "insertText" }));
             input.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
             input.focus();
-            showToast("Question added — press Enter to send");
+            if (notify) showToast("Question added — press Enter to send");
+            return true;
+          }
+          let detailSendLockedUntil = 0;
+          function sendPrompt(value) {
+            if (!value || Date.now() < detailSendLockedUntil) return false;
+            if (!setPrompt(value, false)) return false;
+            detailSendLockedUntil = Date.now() + 1000;
+            window.requestAnimationFrame(() => {
+              const sendControl = findSendControl();
+              if (sendControl) sendControl.click();
+              else {
+                findInput()?.dispatchEvent(new KeyboardEvent("keydown", {
+                  key: "Enter", code: "Enter", keyCode: 13, which: 13,
+                  bubbles: true, composed: true,
+                }));
+              }
+              showToast("Opening exercise details…");
+              scrollToLatest(100);
+            });
             return true;
           }
           function updatePrompt(value) {
@@ -800,6 +826,39 @@ page = dedent(
                   }
                 `);
               }
+              if (nestedRoot.host?.localName === "df-button") {
+                nestedRoot.host.style.setProperty("display", "block", "important");
+                nestedRoot.host.style.setProperty("margin", "0 22px 20px", "important");
+                ensureShadowStyle(nestedRoot, "fitbox-detail-button-theme", `
+                  button, #button, .button {
+                    width: 100% !important;
+                    min-height: 48px !important;
+                    padding: 12px 18px !important;
+                    border: 1px solid #91bd1c !important;
+                    border-radius: 11px !important;
+                    background: #b8f22e !important;
+                    color: #151a12 !important;
+                    box-shadow: 0 5px 14px rgba(111, 147, 13, .16) !important;
+                    font: 800 16px/1.2 "DM Sans", system-ui, sans-serif !important;
+                    cursor: pointer !important;
+                    transition: transform .16s ease, background .16s ease, box-shadow .16s ease !important;
+                  }
+                  button:hover, #button:hover, .button:hover {
+                    background: #c8ff45 !important;
+                    box-shadow: 0 7px 18px rgba(111, 147, 13, .22) !important;
+                    transform: translateY(-1px);
+                  }
+                  button:focus-visible, #button:focus-visible, .button:focus-visible {
+                    outline: 3px solid rgba(111, 147, 13, .34) !important;
+                    outline-offset: 2px !important;
+                  }
+                  button:disabled, #button:disabled, .button:disabled {
+                    opacity: .55 !important;
+                    cursor: wait !important;
+                    transform: none !important;
+                  }
+                `);
+              }
               if (nestedRoot.host?.localName === "df-messenger-user-input") {
                 ensureShadowStyle(nestedRoot, "fitbox-input-theme", `
                   input, textarea { font-size: 18px !important; }
@@ -906,6 +965,18 @@ page = dedent(
           messenger.addEventListener("df-messenger-loaded", () => { fitChatToPanel(); scrollToLatest(120); });
           messenger.addEventListener("df-user-input-entered", () => scrollToLatest(80));
           messenger.addEventListener("df-response-received", () => scrollToLatest(220));
+          messenger.addEventListener("df-button-clicked", (event) => {
+            const detail = event.detail || {};
+            const element = detail.element || detail;
+            const action = element.event || detail.event || {};
+            const eventName = typeof action === "string" ? action : action.name;
+            if (eventName !== "FITBOX_VIEW_DETAILS") return;
+            event.preventDefault();
+            const parameters = action.parameters || element.parameters || {};
+            const title = parameters.exercise_name || "";
+            const query = parameters.query || (title ? `Tell me about ${title}` : "");
+            sendPrompt(query);
+          });
           window.addEventListener("resize", fitChatToPanel);
           new ResizeObserver(fitChatToPanel).observe(stage);
         </script>

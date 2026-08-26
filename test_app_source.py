@@ -122,8 +122,24 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             "white-space: pre-line !important",
             "border-left: 4px solid #b8f22e !important",
             "line-height: 1.85 !important",
+            'nestedRoot.host?.localName === "df-button"',
+            "fitbox-detail-button-theme",
+            "background: #b8f22e !important",
         ):
             self.assertIn(selector, SOURCE)
+
+    def test_view_details_button_sends_a_normal_ai_question(self) -> None:
+        for text in (
+            "function findSendControl()",
+            "function sendPrompt(value)",
+            'messenger.addEventListener("df-button-clicked"',
+            'eventName !== "FITBOX_VIEW_DETAILS"',
+            "event.preventDefault()",
+            "parameters.exercise_name",
+            "sendPrompt(query)",
+            "detailSendLockedUntil = Date.now() + 1000",
+        ):
+            self.assertIn(text, SOURCE)
 
     def test_script_block_is_present_once(self) -> None:
         self.assertEqual(len(re.findall(r"<script>", SOURCE)), 1)
