@@ -838,6 +838,136 @@ page = dedent(
             }
             return null;
           }
+          const recommendationPageMarker = "#fitbox-recommendation-page=";
+          let recommendationPagerSequence = 0;
+          function recommendationCards() {
+            return nestedRoots(findChat()?.shadowRoot)
+              .filter((root) => root.host?.localName === "df-card")
+              .map((root) => root.host);
+          }
+          function cardText(card) {
+            return String(card?.shadowRoot?.textContent || card?.textContent || "")
+              .replace(/\\s+/g, " ").trim();
+          }
+          function stylePagerCard(card, navigation = false) {
+            if (!card?.shadowRoot) return;
+            ensureShadowStyle(card.shadowRoot, "fitbox-pager-card-theme", `
+              .card-wrapper {
+                display: ${navigation ? "flex" : "block"} !important;
+                gap: 10px !important;
+                overflow: visible !important;
+                margin-top: 8px !important;
+                padding: 0 !important;
+                border: 0 !important;
+                border-left: 0 !important;
+                background: transparent !important;
+                box-shadow: none !important;
+              }
+            `);
+            nestedRoots(card.shadowRoot).forEach((root) => {
+              if (root.host?.localName !== "df-button") return;
+              const text = String(root.textContent || root.host.textContent || "").replace(/\\s+/g, " ").trim();
+              const isArrow = /^(Previous page|Next page)$/.test(text);
+              root.host.style.setProperty("display", "block", "important");
+              root.host.style.setProperty("width", isArrow ? "calc(50% - 5px)" : "100%", "important");
+              root.host.style.setProperty("margin", "0", "important");
+              ensureShadowStyle(root, "fitbox-pager-button-theme", `
+                button, #button, .button {
+                  width: 100% !important;
+                  min-height: 50px !important;
+                  border-radius: 12px !important;
+                  border: 1px solid #91bd1c !important;
+                  background: ${isArrow ? "#ffffff" : "#b8f22e"} !important;
+                  color: #151a12 !important;
+                  font: 800 16px/1.2 "DM Sans", system-ui, sans-serif !important;
+                  box-shadow: 0 5px 15px rgba(25, 31, 18, .08) !important;
+                }
+                button:hover, #button:hover, .button:hover {
+                  background: #c8ff45 !important;
+                  transform: translateY(-1px);
+                }
+              `);
+            });
+          }
+          function updateRecommendationGroup(group, page, activated) {
+            const cards = recommendationCards().filter((card) => card.dataset.fitboxPagerGroup === group);
+            const showCard = cards.find((card) => card.dataset.fitboxPagerRole === "show");
+            const navCard = cards.find((card) => card.dataset.fitboxPagerRole === "navigation");
+            cards.filter((card) => card.dataset.fitboxResultIndex).forEach((card) => {
+              const index = Number(card.dataset.fitboxResultIndex);
+              const visible = page === 1 ? index <= 3 : index >= 4;
+              card.style.setProperty("display", visible ? "block" : "none", "important");
+            });
+            if (showCard) {
+              showCard.dataset.fitboxPagerActivated = String(activated);
+              showCard.dataset.fitboxPagerPage = String(page);
+              showCard.style.setProperty("display", activated ? "none" : "block", "important");
+              stylePagerCard(showCard, false);
+            }
+            if (navCard) {
+              navCard.style.setProperty("display", activated ? "block" : "none", "important");
+              stylePagerCard(navCard, true);
+              nestedRoots(navCard.shadowRoot).forEach((root) => {
+                if (root.host?.localName !== "df-button") return;
+                const text = String(root.textContent || root.host.textContent || "").replace(/\\s+/g, " ").trim();
+                const disabled = (page === 1 && text === "Previous page") || (page === 2 && text === "Next page");
+                root.host.style.setProperty("opacity", disabled ? ".42" : "1", "important");
+                root.host.style.setProperty("pointer-events", disabled ? "none" : "auto", "important");
+                root.host.setAttribute("aria-disabled", String(disabled));
+              });
+            }
+          }
+          function discoverRecommendationPagers() {
+            const cards = recommendationCards();
+            cards.forEach((card) => {
+              const match = cardText(card).match(/(?:^|\\s)([1-6])\\.\\s/);
+              if (match) card.dataset.fitboxResultIndex = match[1];
+            });
+            cards.forEach((showCard, showIndex) => {
+              if (!cardText(showCard).includes("Show more exercises")) return;
+              const navCard = cards.slice(showIndex + 1).find((card) => {
+                const text = cardText(card);
+                return text.includes("Previous page") && text.includes("Next page");
+              });
+              if (!navCard) return;
+              const results = [];
+              for (let index = showIndex - 1; index >= 0; index -= 1) {
+                const card = cards[index];
+                if (!card.dataset.fitboxResultIndex) {
+                  if (results.length) break;
+                  continue;
+                }
+                results.unshift(card);
+                if (card.dataset.fitboxResultIndex === "1") break;
+              }
+              if (results.length < 4) return;
+              const group = showCard.dataset.fitboxPagerGroup || `fitbox-pager-${++recommendationPagerSequence}`;
+              showCard.dataset.fitboxPagerGroup = group;
+              showCard.dataset.fitboxPagerRole = "show";
+              navCard.dataset.fitboxPagerGroup = group;
+              navCard.dataset.fitboxPagerRole = "navigation";
+              results.forEach((card) => { card.dataset.fitboxPagerGroup = group; });
+              const activated = showCard.dataset.fitboxPagerActivated === "true";
+              const page = Number(showCard.dataset.fitboxPagerPage || "1");
+              updateRecommendationGroup(group, page, activated);
+            });
+          }
+          function setRecommendationPage(page, event) {
+            discoverRecommendationPagers();
+            const pathCard = event?.composedPath?.().find((node) => node?.localName === "df-card");
+            let group = pathCard?.dataset?.fitboxPagerGroup;
+            if (!group) {
+              const latest = recommendationCards().filter((card) => card.dataset.fitboxPagerRole === "show").at(-1);
+              group = latest?.dataset.fitboxPagerGroup;
+            }
+            if (!group) return false;
+            event?.preventDefault();
+            event?.stopImmediatePropagation();
+            updateRecommendationGroup(group, page, true);
+            showToast(page === 1 ? "Showing exercises 1–3" : "Showing exercises 4–6");
+            scrollToLatest(80);
+            return true;
+          }
           function themeChatContent() {
             nestedRoots(findChat()?.shadowRoot).forEach((nestedRoot) => {
               nestedRoot.querySelectorAll(".user-message").forEach((bubble) => {
@@ -1020,6 +1150,7 @@ page = dedent(
                 `);
               }
             });
+            discoverRecommendationPagers();
           }
           let messageObserver = null;
           let observedMessageList = null;
@@ -1136,15 +1267,23 @@ page = dedent(
           document.addEventListener("click", (event) => {
             const markerNode = event.composedPath().find((node) => {
               if (!node || typeof node.getAttribute !== "function") return false;
-              return String(node.getAttribute("href") || node.getAttribute("link") || "").includes(detailMarker);
+              const link = String(node.getAttribute("href") || node.getAttribute("link") || "");
+              return link.includes(detailMarker) || link.includes(recommendationPageMarker);
             });
             if (!markerNode) return;
             const link = markerNode.getAttribute("href") || markerNode.getAttribute("link");
-            sendDetailsFromMarker(link, event);
+            if (String(link).includes(recommendationPageMarker)) {
+              const page = Number(String(link).split(recommendationPageMarker)[1] || "1");
+              setRecommendationPage(page === 2 ? 2 : 1, event);
+            } else sendDetailsFromMarker(link, event);
           }, true);
           messenger.addEventListener("df-button-clicked", (event) => {
             const element = event.detail?.element || event.detail || {};
-            sendDetailsFromMarker(element.link, event);
+            const link = String(element.link || "");
+            if (link.includes(recommendationPageMarker)) {
+              const page = Number(link.split(recommendationPageMarker)[1] || "1");
+              setRecommendationPage(page === 2 ? 2 : 1, event);
+            } else sendDetailsFromMarker(link, event);
           });
           clearChatButton.addEventListener("click", () => {
             clearChatButton.disabled = true;

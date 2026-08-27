@@ -27,6 +27,9 @@ type, or combinations of those filters. Exercise records come from
 - A decorated welcome hero that fills the initial chat space and fades after the first user message.
 - A **Clear chat** control that resets the conversation and starts a fresh Messenger session.
 - Native Dialogflow Messenger cards with an expandable instruction section.
+- Six-result recommendations use local two-page cards: **Show more exercises**
+  switches from cards 1–3 to 4–6, then left/right arrows navigate without
+  sending another message to Dialogflow.
 - **View details** sends a visible `Tell me about {exercise}` user message,
   stays in the current page, then the assistant answers with the existing
   exercise-details card.

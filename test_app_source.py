@@ -169,6 +169,25 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         ):
             self.assertIn(text, SOURCE)
 
+    def test_recommendation_pages_are_local_and_do_not_send_chat_text(self) -> None:
+        for text in (
+            'const recommendationPageMarker = "#fitbox-recommendation-page="',
+            "function discoverRecommendationPagers()",
+            "function updateRecommendationGroup(group, page, activated)",
+            "function setRecommendationPage(page, event)",
+            '"Showing exercises 1–3"',
+            '"Showing exercises 4–6"',
+            'text === "Previous page"',
+            'text === "Next page"',
+            'card.dataset.fitboxResultIndex',
+        ):
+            self.assertIn(text, SOURCE)
+        pager_function = SOURCE.split("function setRecommendationPage", 1)[1].split(
+            "function themeChatContent", 1
+        )[0]
+        self.assertNotIn("sendPrompt(", pager_function)
+        self.assertNotIn("setPrompt(", pager_function)
+
     def test_script_block_is_present_once(self) -> None:
         self.assertEqual(len(re.findall(r"<script>", SOURCE)), 1)
         self.assertEqual(len(re.findall(r"</script>", SOURCE)), 2)
