@@ -86,7 +86,7 @@ page = dedent(
             --lime-dark: #6f930d;
             --paper: #fbfcf7;
             --line: #dfe4d8;
-            --drawer-width: 430px;
+            --drawer-width: 380px;
             --card-shadow: 0 8px 24px rgba(25, 31, 18, .08);
           }
           * { box-sizing: border-box; }
@@ -97,7 +97,7 @@ page = dedent(
             background: #eef1e8;
             color: var(--ink);
             font-family: "DM Sans", system-ui, sans-serif;
-            font-size: 18px;
+            font-size: 16px;
           }
           button, select, input { font: inherit; }
           button:focus-visible, select:focus-visible, input:focus-visible {
@@ -120,30 +120,30 @@ page = dedent(
             align-items: center;
             justify-content: space-between;
             gap: 18px;
-            padding: 15px 28px;
+            padding: 12px 22px;
             background: #171b14;
             color: white;
           }
-          .brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
+          .brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
           .mark {
-            width: 56px;
-            height: 56px;
-            flex: 0 0 56px;
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
             display: grid;
             place-items: center;
-            border-radius: 15px;
+            border-radius: 13px;
             background: var(--lime);
             color: #11150e;
-            font-size: 32px;
+            font-size: 27px;
           }
-          h1 { margin: 0; font: 800 26px/1.2 "Manrope", sans-serif; }
-          .subtitle { margin-top: 5px; color: #b9c0b4; font-size: 16px; }
+          h1 { margin: 0; font: 800 22px/1.2 "Manrope", sans-serif; }
+          .subtitle { margin-top: 4px; color: #b9c0b4; font-size: 14px; }
           .status {
             display: flex;
             align-items: center;
             gap: 8px;
             color: #dce3d7;
-            font-size: 16px;
+            font-size: 14px;
             white-space: nowrap;
           }
           .topbar-actions { display: flex; align-items: center; gap: 16px; }
@@ -170,8 +170,8 @@ page = dedent(
           .clear-chat:disabled { opacity: .58; cursor: wait; transform: none; }
           .clear-icon { color: var(--lime); font-size: 20px; line-height: 1; }
           .dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: var(--lime);
             box-shadow: 0 0 0 4px rgba(184,242,46,.12);
@@ -212,7 +212,7 @@ page = dedent(
             width: var(--drawer-width);
             height: 100%;
             overflow-y: auto;
-            padding: 86px 28px 32px;
+            padding: 76px 24px 28px;
             scrollbar-width: thin;
             scrollbar-color: #c9d0c1 transparent;
           }
@@ -221,16 +221,16 @@ page = dedent(
             top: 72px;
             left: 12px;
             z-index: 6;
-            width: 54px;
-            height: 54px;
+            width: 48px;
+            height: 48px;
             display: grid;
             place-items: center;
             border: 1px solid #c8d0c0;
-            border-radius: 14px;
+            border-radius: 12px;
             background: #171b14;
             color: var(--lime);
             box-shadow: 0 8px 18px rgba(21, 26, 18, .15);
-            font-size: 35px;
+            font-size: 31px;
             line-height: 1;
             cursor: pointer;
             transition: left .24s ease, top .24s ease, background .16s ease, color .16s ease;
@@ -238,90 +238,90 @@ page = dedent(
           .drawer-toggle:hover { background: #252c20; }
           .workspace.drawer-open .drawer-toggle {
             top: 15px;
-            left: calc(var(--drawer-width) - 70px);
+            left: calc(var(--drawer-width) - 62px);
           }
-          .drawer-title { margin: 0; font: 800 28px/1.2 "Manrope", sans-serif; }
-          .drawer-lead { margin: 11px 0 26px; color: var(--muted); font-size: 17px; line-height: 1.55; }
-          .field { margin-top: 21px; }
+          .drawer-title { margin: 0; font: 800 24px/1.2 "Manrope", sans-serif; }
+          .drawer-lead { margin: 9px 0 22px; color: var(--muted); font-size: 15px; line-height: 1.55; }
+          .field { margin-top: 18px; }
           .field label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 16px;
+            margin-bottom: 6px;
+            font-size: 14px;
             font-weight: 700;
             color: #323a2d;
           }
           .field select, .field input {
             width: 100%;
-            min-height: 54px;
+            min-height: 48px;
             border: 1px solid #cad2c3;
-            border-radius: 12px;
+            border-radius: 10px;
             background: white;
             color: var(--ink);
-            padding: 13px 15px;
-            font-size: 17px;
+            padding: 11px 13px;
+            font-size: 15px;
           }
           .field input::placeholder { color: #858d80; }
           .flow-note {
-            margin: 18px 0 0;
-            padding: 14px 16px;
+            margin: 15px 0 0;
+            padding: 12px 14px;
             border-left: 4px solid var(--lime);
             border-radius: 9px;
             background: #f3f8e8;
             color: #44503d;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1.45;
           }
           .step[hidden], .flow-section[hidden] { display: none !important; }
           .prompt-card {
-            margin-top: 21px;
-            padding: 19px;
+            margin-top: 18px;
+            padding: 16px;
             border: 1px solid #d5dfc7;
-            border-radius: 14px;
+            border-radius: 12px;
             background: #f3f8e8;
           }
           .prompt-label {
             color: var(--lime-dark);
-            font: 800 14px/1.2 "Manrope", sans-serif;
+            font: 800 12px/1.2 "Manrope", sans-serif;
             letter-spacing: .09em;
             text-transform: uppercase;
           }
           .prompt-preview {
-            min-height: 48px;
-            margin: 9px 0 13px;
+            min-height: 42px;
+            margin: 7px 0 11px;
             color: #252d20;
-            font-size: 17px;
+            font-size: 15px;
             line-height: 1.45;
             overflow-wrap: anywhere;
           }
           .use-question {
             width: 100%;
-            min-height: 52px;
+            min-height: 46px;
             border: 0;
-            border-radius: 11px;
+            border-radius: 9px;
             background: #171b14;
             color: white;
             font-weight: 700;
-            font-size: 17px;
+            font-size: 15px;
             cursor: pointer;
           }
           .use-question:hover:not(:disabled) { background: #2a3224; }
           .use-question:disabled { opacity: .45; cursor: not-allowed; }
           .examples {
-            margin-top: 26px;
-            padding-top: 21px;
+            margin-top: 22px;
+            padding-top: 18px;
             border-top: 1px solid var(--line);
           }
-          .examples h3 { margin: 0 0 14px; font-size: 17px; }
-          .example-list { display: grid; gap: 11px; }
+          .examples h3 { margin: 0 0 12px; font-size: 15px; }
+          .example-list { display: grid; gap: 9px; }
           .example {
             width: 100%;
             border: 1px solid #d1d8ca;
-            border-radius: 11px;
-            padding: 13px 14px;
+            border-radius: 9px;
+            padding: 11px 12px;
             background: white;
             color: #333b2e;
             text-align: left;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1.35;
             cursor: pointer;
           }
@@ -351,11 +351,11 @@ page = dedent(
           }
           .chat-hero {
             position: absolute;
-            top: 112px;
+            top: 92px;
             left: 50%;
             z-index: 3;
-            width: min(820px, calc(100% - 96px));
-            padding: 18px 30px 24px;
+            width: min(760px, calc(100% - 80px));
+            padding: 15px 24px 20px;
             transform: translateX(-50%);
             text-align: center;
             pointer-events: none;
@@ -371,15 +371,15 @@ page = dedent(
             border: 1px solid rgba(111, 147, 13, .2);
           }
           .chat-hero::before {
-            width: 230px;
-            height: 230px;
+            width: 200px;
+            height: 200px;
             top: -74px;
             left: 2%;
             background: radial-gradient(circle, rgba(184,242,46,.13), transparent 68%);
           }
           .chat-hero::after {
-            width: 160px;
-            height: 160px;
+            width: 140px;
+            height: 140px;
             right: 5%;
             bottom: -48px;
             border-style: dashed;
@@ -388,14 +388,14 @@ page = dedent(
             display: inline-flex;
             align-items: center;
             gap: 9px;
-            margin-bottom: 15px;
-            padding: 7px 13px;
+            margin-bottom: 12px;
+            padding: 6px 11px;
             border: 1px solid rgba(111, 147, 13, .28);
             border-radius: 999px;
             background: rgba(255, 255, 255, .72);
             box-shadow: 0 6px 18px rgba(25, 31, 18, .06);
             color: #5f7e0b;
-            font: 800 12px/1 "Manrope", sans-serif;
+            font: 800 11px/1 "Manrope", sans-serif;
             letter-spacing: .16em;
             text-transform: uppercase;
           }
@@ -410,7 +410,7 @@ page = dedent(
           .hero-title {
             margin: 0;
             color: #171b14;
-            font: 900 clamp(42px, 5.2vw, 76px)/.96 "Manrope", sans-serif;
+            font: 900 clamp(36px, 4.6vw, 64px)/.96 "Manrope", sans-serif;
             letter-spacing: -.055em;
             text-wrap: balance;
           }
@@ -421,10 +421,10 @@ page = dedent(
             text-shadow: 0 8px 28px rgba(111, 147, 13, .16);
           }
           .hero-copy {
-            max-width: 860px;
-            margin: 19px auto 0;
+            max-width: 760px;
+            margin: 16px auto 0;
             color: #5c6657;
-            font-size: 18px;
+            font-size: 16px;
             line-height: 1.5;
             white-space: nowrap;
           }
@@ -432,16 +432,16 @@ page = dedent(
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 9px;
-            margin-top: 19px;
+            gap: 8px;
+            margin-top: 16px;
           }
           .hero-pill {
-            padding: 7px 12px;
+            padding: 6px 11px;
             border: 1px solid #d5ddca;
             border-radius: 999px;
             background: rgba(251, 253, 247, .82);
             color: #4d5848;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             box-shadow: 0 5px 14px rgba(25, 31, 18, .05);
           }
@@ -456,7 +456,7 @@ page = dedent(
             display: grid;
             place-items: center;
             color: var(--muted);
-            font-size: 17px;
+            font-size: 15px;
           }
           df-messenger {
             --df-messenger-bot-message: #ffffff;
@@ -477,16 +477,16 @@ page = dedent(
           }
           @media (max-width: 760px) {
             .shell { height: 100vh; border-radius: 0; }
-            .topbar { padding: 12px 16px; }
-            .mark { width: 48px; height: 48px; flex-basis: 48px; font-size: 27px; }
-            h1 { font-size: 22px; }
-            .subtitle { font-size: 14px; }
+            .topbar { padding: 10px 14px; }
+            .mark { width: 42px; height: 42px; flex-basis: 42px; font-size: 23px; }
+            h1 { font-size: 19px; }
+            .subtitle { font-size: 12px; }
             .status { display: none; }
             .topbar-actions { gap: 8px; }
             .clear-chat { padding: 8px 10px; }
-            .chat-hero { top: 94px; width: calc(100% - 44px); padding-inline: 10px; }
-            .hero-title { font-size: clamp(34px, 10vw, 52px); }
-            .hero-copy { max-width: 430px; margin-top: 14px; font-size: 16px; white-space: normal; }
+            .chat-hero { top: 78px; width: calc(100% - 40px); padding-inline: 8px; }
+            .hero-title { font-size: clamp(30px, 9vw, 46px); }
+            .hero-copy { max-width: 410px; margin-top: 12px; font-size: 14px; white-space: normal; }
             .hero-pills { margin-top: 14px; }
             .drawer {
               position: absolute;
@@ -849,12 +849,12 @@ page = dedent(
               ensureShadowStyle(root, "fitbot-pager-button-theme", `
                 button, #button, .button {
                   width: 100% !important;
-                  min-height: 50px !important;
+                  min-height: 44px !important;
                   border-radius: 12px !important;
                   border: 1px solid #91bd1c !important;
                   background: ${isArrow ? "#ffffff" : "#b8f22e"} !important;
                   color: #151a12 !important;
-                  font: 800 16px/1.2 "DM Sans", system-ui, sans-serif !important;
+                  font: 800 14px/1.2 "DM Sans", system-ui, sans-serif !important;
                   box-shadow: 0 5px 15px rgba(25, 31, 18, .08) !important;
                 }
                 button:hover, #button:hover, .button:hover {
@@ -971,17 +971,17 @@ page = dedent(
                     scrollbar-gutter: stable;
                     overscroll-behavior: contain;
                     scroll-behavior: smooth;
-                    padding: 24px !important;
+                    padding: 20px !important;
                   }
                   #messageList .message {
-                    font-size: 18px !important;
+                    font-size: 16px !important;
                   }
                   #messageList .message.bot-message {
-                    max-width: min(800px, calc(100% - 32px)) !important;
-                    margin-right: 28px !important;
-                    padding: 17px 22px !important;
+                    max-width: min(720px, calc(100% - 28px)) !important;
+                    margin-right: 24px !important;
+                    padding: 14px 18px !important;
                     border: 1px solid #dfe4d8;
-                    border-radius: 16px !important;
+                    border-radius: 14px !important;
                     box-shadow: 0 5px 16px rgba(25, 31, 18, .06);
                     line-height: 1.5 !important;
                   }
@@ -993,16 +993,16 @@ page = dedent(
                   #messageList .message.user-message {
                     display: block !important;
                     width: fit-content !important;
-                    max-width: min(800px, calc(100% - 32px)) !important;
+                    max-width: min(720px, calc(100% - 28px)) !important;
                     margin-left: auto !important;
                     margin-right: 8px !important;
-                    padding: 16px 22px !important;
-                    border-radius: 16px !important;
+                    padding: 13px 18px !important;
+                    border-radius: 14px !important;
                   }
                   #messageList df-card {
                     align-self: flex-start;
                     display: block;
-                    width: min(720px, calc(100% - 12px));
+                    width: min(650px, calc(100% - 12px));
                     max-width: calc(100% - 12px);
                     visibility: hidden;
                   }
@@ -1032,18 +1032,18 @@ page = dedent(
               if (nestedRoot.host?.localName === "df-description") {
                 ensureShadowStyle(nestedRoot, "fitbot-description-theme", `
                   #descriptionWrapper {
-                    padding: 21px 23px !important;
+                    padding: 18px 19px !important;
                     background: #ffffff !important;
                     border-radius: 0 !important;
                     font-family: "DM Sans", system-ui, sans-serif !important;
                   }
                   .title {
                     color: #151a12 !important;
-                    font: 800 21px/1.35 "Manrope", system-ui, sans-serif !important;
+                    font: 800 18px/1.35 "Manrope", system-ui, sans-serif !important;
                   }
                   .description-line {
                     color: #4d5748 !important;
-                    font-size: 17px !important;
+                    font-size: 15px !important;
                     line-height: 1.45 !important;
                     padding-top: 6px !important;
                   }
@@ -1052,7 +1052,7 @@ page = dedent(
               if (nestedRoot.host?.localName === "df-accordion") {
                 ensureShadowStyle(nestedRoot, "fitbot-accordion-theme", `
                   #dfAccordionWrapper {
-                    padding: 20px 23px !important;
+                    padding: 16px 19px !important;
                     background: linear-gradient(180deg, #fbfdf7 0%, #f5f9ec 100%) !important;
                     border-top: 1px solid #dfe7d4;
                     border-radius: 0 !important;
@@ -1061,49 +1061,49 @@ page = dedent(
                   }
                   #dfAccordionWrapper #title {
                     color: #151a12 !important;
-                    font-size: 19px !important;
+                    font-size: 16px !important;
                     font-weight: 800 !important;
                     letter-spacing: -.01em !important;
                   }
                   #dfAccordionWrapper #subtitle {
                     margin-top: 4px !important;
                     color: #66705f !important;
-                    font-size: 16px !important;
+                    font-size: 14px !important;
                   }
                   #dfAccordionWrapper #expandIcon {
                     color: #6f930d !important;
                     filter: drop-shadow(0 2px 3px rgba(111, 147, 13, .18));
                   }
                   #dfAccordionWrapper #text {
-                    margin-top: 14px !important;
-                    padding: 15px 18px !important;
+                    margin-top: 11px !important;
+                    padding: 12px 15px !important;
                     border: 1px solid #d6dfca !important;
                     border-left: 4px solid #b8f22e !important;
                     border-radius: 12px !important;
                     background: rgba(255, 255, 255, .92) !important;
                     box-shadow: 0 6px 18px rgba(25, 31, 18, .06) !important;
                     color: #34402f !important;
-                    font-size: 17px !important;
+                    font-size: 15px !important;
                     font-weight: 600 !important;
-                    line-height: 1.85 !important;
+                    line-height: 1.7 !important;
                     white-space: pre-line !important;
                   }
                 `);
               }
               if (nestedRoot.host?.localName === "df-button") {
                 nestedRoot.host.style.setProperty("display", "block", "important");
-                nestedRoot.host.style.setProperty("margin", "0 22px 20px", "important");
+                nestedRoot.host.style.setProperty("margin", "0 18px 16px", "important");
                 ensureShadowStyle(nestedRoot, "fitbot-detail-button-theme", `
                   button, #button, .button {
                     width: 100% !important;
-                    min-height: 48px !important;
-                    padding: 12px 18px !important;
+                    min-height: 44px !important;
+                    padding: 10px 15px !important;
                     border: 1px solid #91bd1c !important;
                     border-radius: 11px !important;
                     background: #b8f22e !important;
                     color: #151a12 !important;
                     box-shadow: 0 5px 14px rgba(111, 147, 13, .16) !important;
-                    font: 800 16px/1.2 "DM Sans", system-ui, sans-serif !important;
+                    font: 800 14px/1.2 "DM Sans", system-ui, sans-serif !important;
                     cursor: pointer !important;
                     transition: transform .16s ease, background .16s ease, box-shadow .16s ease !important;
                   }
@@ -1125,8 +1125,8 @@ page = dedent(
               }
               if (nestedRoot.host?.localName === "df-messenger-user-input") {
                 ensureShadowStyle(nestedRoot, "fitbot-input-theme", `
-                  input, textarea { font-size: 18px !important; }
-                  .input-container { min-height: 66px !important; }
+                  input, textarea { font-size: 16px !important; }
+                  .input-container { min-height: 58px !important; }
                 `);
               }
             });

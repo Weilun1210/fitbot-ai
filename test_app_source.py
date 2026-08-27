@@ -64,12 +64,12 @@ class FitBotStreamlitV41Tests(unittest.TestCase):
         self.assertIn('openButton.style.setProperty("display", "none", "important")', SOURCE)
         self.assertNotIn('chat.style.setProperty("inset", "12px", "important")', SOURCE)
 
-    def test_extra_large_ui_remains_viewport_based(self) -> None:
-        self.assertIn("--drawer-width: 430px", SOURCE)
-        self.assertIn("padding: 15px 28px;", SOURCE)
-        self.assertIn('font: 800 26px/1.2 "Manrope"', SOURCE)
-        self.assertIn("font-size: 18px !important;", SOURCE)
-        self.assertIn("min-height: 66px !important;", SOURCE)
+    def test_compact_ui_remains_viewport_based(self) -> None:
+        self.assertIn("--drawer-width: 380px", SOURCE)
+        self.assertIn("padding: 12px 22px;", SOURCE)
+        self.assertIn('font: 800 22px/1.2 "Manrope"', SOURCE)
+        self.assertIn("font-size: 16px !important;", SOURCE)
+        self.assertIn("min-height: 58px !important;", SOURCE)
         self.assertIn("fitbot-input-theme", SOURCE)
 
     def test_question_guide_matches_dialogflow_training(self) -> None:
@@ -129,7 +129,7 @@ class FitBotStreamlitV41Tests(unittest.TestCase):
             "fitbot-card-theme",
             "white-space: pre-line !important",
             "border-left: 4px solid #b8f22e !important",
-            "line-height: 1.85 !important",
+            "line-height: 1.7 !important",
             'nestedRoot.host?.localName === "df-button"',
             "fitbot-detail-button-theme",
             "background: #b8f22e !important",
@@ -161,7 +161,7 @@ class FitBotStreamlitV41Tests(unittest.TestCase):
             "Your training companion",
             "Train smarter.",
             "Move stronger.",
-            "max-width: 860px;",
+            "max-width: 760px;",
             "white-space: nowrap;",
             "white-space: normal;",
             ".chat-stage.conversation-active .chat-hero",
