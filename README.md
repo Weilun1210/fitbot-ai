@@ -1,19 +1,19 @@
-# FitBox AI Assistant
+# FitBot
 
-FitBox is a **Streamlit** interface connected to a **Dialogflow ES** agent and a
+FitBot is a **Streamlit** interface connected to a **Dialogflow ES** agent and a
 PythonAnywhere webhook. It helps users discover suitable exercises and view
 structured exercise guidance.
 
 ## Live project
 
-- Public website: <https://fitboxai.streamlit.app/>
+- Public website: <https://fitbot.streamlit.app/>
 - GitHub repository: <https://github.com/Weilun1210/fitbox-streamlit-assistant>
 - Dialogflow ES Agent ID: `8ff14895-4120-431e-b4ef-015ed78ce0cc`
 - Tested Streamlit version: `1.61.1`
 
 ## Capabilities
 
-FitBox recommends exercises by fitness level, body part, equipment, exercise
+FitBot recommends exercises by fitness level, body part, equipment, exercise
 type, or combinations of those filters. Exercise records come from
 `megaGymDataset.csv`.
 
@@ -57,5 +57,5 @@ reproducible.
 4. Select **Deploy**.
 
 No API key is stored in this repository. Dialogflow Messenger uses the enabled
-FitBox integration, while recommendations and exercise details are returned by
+FitBot integration, while recommendations and exercise details are returned by
 the webhook.

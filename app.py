@@ -1,4 +1,4 @@
-"""FitBox Streamlit front end for the Dialogflow ES agent.
+"""FitBot Streamlit front end for the Dialogflow ES agent.
 
 The website provides an accessible question builder and embeds Dialogflow
 Messenger. Dialogflow and the PythonAnywhere webhook remain responsible for
@@ -14,7 +14,7 @@ import streamlit.components.v1 as components
 AGENT_ID = "8ff14895-4120-431e-b4ef-015ed78ce0cc"
 
 st.set_page_config(
-    page_title="FitBox AI Assistant",
+    page_title="FitBot",
     page_icon="💪",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -535,7 +535,7 @@ page = dedent(
             <div class="brand">
               <div class="mark" aria-hidden="true">💪</div>
               <div>
-                <h1>FitBox AI Assistant</h1>
+                <h1>FitBot</h1>
                 <div class="subtitle">Personalised exercise discovery</div>
               </div>
             </div>
@@ -557,7 +557,7 @@ page = dedent(
             <aside class="drawer" id="question-guide" aria-label="AI question guide" aria-hidden="true">
               <div class="drawer-inner">
                 <h2 class="drawer-title">Build a question</h2>
-                <p class="drawer-lead">Choose a supported question. FitBox will prepare the exact wording for you.</p>
+                <p class="drawer-lead">Choose a supported question. FitBot will prepare the exact wording for you.</p>
 
                 <div class="field">
                   <label for="question-category">What would you like to ask?</label>
@@ -637,7 +637,7 @@ page = dedent(
                 <section class="examples" aria-labelledby="examples-title">
                   <h3 id="examples-title">Example questions</h3>
                   <div class="example-list">
-                    <button class="example" type="button" data-prompt="How do I use FitBox?">How do I use FitBox?</button>
+                    <button class="example" type="button" data-prompt="How do I use FitBot?">How do I use FitBot?</button>
                     <button class="example" type="button" data-prompt="Show me beginner exercises">Show me beginner exercises</button>
                     <button class="example" type="button" data-prompt="Show me exercises using dumbbells">Show me exercises using dumbbells</button>
                     <button class="example" type="button" data-prompt="Show me strength exercises">Show me strength exercises</button>
@@ -648,12 +648,12 @@ page = dedent(
               </div>
             </aside>
 
-            <section class="chat-stage" id="chat-stage" aria-label="FitBox chat">
-              <div class="loading" id="loading" role="status">Loading FitBox assistant…</div>
-              <section class="chat-hero" id="chat-hero" aria-label="FitBox introduction">
+            <section class="chat-stage" id="chat-stage" aria-label="FitBot chat">
+              <div class="loading" id="loading" role="status">Loading FitBot…</div>
+              <section class="chat-hero" id="chat-hero" aria-label="FitBot introduction">
                 <div class="hero-kicker">Your training companion</div>
                 <h2 class="hero-title">Train smarter.<span>Move stronger.</span></h2>
-                <p class="hero-copy">Tell FitBox what you want to train, your fitness level, or the equipment you have.</p>
+                <p class="hero-copy">Tell FitBot what you want to train, your fitness level, or the equipment you have.</p>
                 <div class="hero-pills" aria-hidden="true">
                   <span class="hero-pill">Fitness level</span>
                   <span class="hero-pill">Body part</span>
@@ -661,7 +661,7 @@ page = dedent(
                   <span class="hero-pill">Training type</span>
                 </div>
               </section>
-              <df-messenger intent="WELCOME" chat-title="FitBox Assistant" agent-id="__AGENT_ID__" language-code="en" expand></df-messenger>
+              <df-messenger intent="WELCOME" chat-title="FitBot" agent-id="__AGENT_ID__" language-code="en" expand></df-messenger>
             </section>
           </div>
         </main>
@@ -812,7 +812,7 @@ page = dedent(
             }
             return null;
           }
-          const recommendationPageMarker = "#fitbox-recommendation-page=";
+          const recommendationPageMarker = "#fitbot-recommendation-page=";
           let recommendationPagerSequence = 0;
           function recommendationCards() {
             return nestedRoots(findChat()?.shadowRoot)
@@ -826,7 +826,7 @@ page = dedent(
           }
           function stylePagerCard(card, navigation = false) {
             if (!card?.shadowRoot) return;
-            ensureShadowStyle(card.shadowRoot, "fitbox-pager-card-theme", `
+            ensureShadowStyle(card.shadowRoot, "fitbot-pager-card-theme", `
               .card-wrapper {
                 display: ${navigation ? "flex" : "block"} !important;
                 gap: 10px !important;
@@ -846,7 +846,7 @@ page = dedent(
               root.host.style.setProperty("display", "block", "important");
               root.host.style.setProperty("width", isArrow ? "calc(50% - 5px)" : "100%", "important");
               root.host.style.setProperty("margin", "0", "important");
-              ensureShadowStyle(root, "fitbox-pager-button-theme", `
+              ensureShadowStyle(root, "fitbot-pager-button-theme", `
                 button, #button, .button {
                   width: 100% !important;
                   min-height: 50px !important;
@@ -865,17 +865,17 @@ page = dedent(
             });
           }
           function updateRecommendationGroup(group, page, activated) {
-            const cards = recommendationCards().filter((card) => card.dataset.fitboxPagerGroup === group);
-            const showCard = cards.find((card) => card.dataset.fitboxPagerRole === "show");
-            const navCard = cards.find((card) => card.dataset.fitboxPagerRole === "navigation");
-            cards.filter((card) => card.dataset.fitboxResultIndex).forEach((card) => {
-              const index = Number(card.dataset.fitboxResultIndex);
+            const cards = recommendationCards().filter((card) => card.dataset.fitbotPagerGroup === group);
+            const showCard = cards.find((card) => card.dataset.fitbotPagerRole === "show");
+            const navCard = cards.find((card) => card.dataset.fitbotPagerRole === "navigation");
+            cards.filter((card) => card.dataset.fitbotResultIndex).forEach((card) => {
+              const index = Number(card.dataset.fitbotResultIndex);
               const visible = page === 1 ? index <= 3 : index >= 4;
               card.style.setProperty("display", visible ? "block" : "none", "important");
             });
             if (showCard) {
-              showCard.dataset.fitboxPagerActivated = String(activated);
-              showCard.dataset.fitboxPagerPage = String(page);
+              showCard.dataset.fitbotPagerActivated = String(activated);
+              showCard.dataset.fitbotPagerPage = String(page);
               showCard.style.setProperty("display", activated ? "none" : "block", "important");
               stylePagerCard(showCard, false);
             }
@@ -897,7 +897,7 @@ page = dedent(
             const cards = recommendationCards();
             cards.forEach((card) => {
               const match = cardText(card).match(/(?:^|\\s)([1-6])\\.\\s/);
-              if (match) card.dataset.fitboxResultIndex = match[1];
+              if (match) card.dataset.fitbotResultIndex = match[1];
             });
             cards.forEach((showCard, showIndex) => {
               if (!cardText(showCard).includes("Show more exercises")) return;
@@ -909,32 +909,32 @@ page = dedent(
               const results = [];
               for (let index = showIndex - 1; index >= 0; index -= 1) {
                 const card = cards[index];
-                if (!card.dataset.fitboxResultIndex) {
+                if (!card.dataset.fitbotResultIndex) {
                   if (results.length) break;
                   continue;
                 }
                 results.unshift(card);
-                if (card.dataset.fitboxResultIndex === "1") break;
+                if (card.dataset.fitbotResultIndex === "1") break;
               }
               if (results.length < 4) return;
-              const group = showCard.dataset.fitboxPagerGroup || `fitbox-pager-${++recommendationPagerSequence}`;
-              showCard.dataset.fitboxPagerGroup = group;
-              showCard.dataset.fitboxPagerRole = "show";
-              navCard.dataset.fitboxPagerGroup = group;
-              navCard.dataset.fitboxPagerRole = "navigation";
-              results.forEach((card) => { card.dataset.fitboxPagerGroup = group; });
-              const activated = showCard.dataset.fitboxPagerActivated === "true";
-              const page = Number(showCard.dataset.fitboxPagerPage || "1");
+              const group = showCard.dataset.fitbotPagerGroup || `fitbot-pager-${++recommendationPagerSequence}`;
+              showCard.dataset.fitbotPagerGroup = group;
+              showCard.dataset.fitbotPagerRole = "show";
+              navCard.dataset.fitbotPagerGroup = group;
+              navCard.dataset.fitbotPagerRole = "navigation";
+              results.forEach((card) => { card.dataset.fitbotPagerGroup = group; });
+              const activated = showCard.dataset.fitbotPagerActivated === "true";
+              const page = Number(showCard.dataset.fitbotPagerPage || "1");
               updateRecommendationGroup(group, page, activated);
             });
           }
           function setRecommendationPage(page, event) {
             discoverRecommendationPagers();
             const pathCard = event?.composedPath?.().find((node) => node?.localName === "df-card");
-            let group = pathCard?.dataset?.fitboxPagerGroup;
+            let group = pathCard?.dataset?.fitbotPagerGroup;
             if (!group) {
-              const latest = recommendationCards().filter((card) => card.dataset.fitboxPagerRole === "show").at(-1);
-              group = latest?.dataset.fitboxPagerGroup;
+              const latest = recommendationCards().filter((card) => card.dataset.fitbotPagerRole === "show").at(-1);
+              group = latest?.dataset.fitbotPagerGroup;
             }
             if (!group) return false;
             event?.preventDefault();
@@ -953,7 +953,7 @@ page = dedent(
                 bubble.querySelectorAll("*").forEach((child) => child.style.setProperty("color", "#151a12", "important"));
               });
               if (nestedRoot.querySelector("#messageList")) {
-                ensureShadowStyle(nestedRoot, "fitbox-message-theme", `
+                ensureShadowStyle(nestedRoot, "fitbot-message-theme", `
                   .message-list-wrapper {
                     flex: 1 1 0% !important;
                     height: auto !important;
@@ -1006,7 +1006,7 @@ page = dedent(
                     max-width: calc(100% - 12px);
                     visibility: hidden;
                   }
-                  #messageList df-card[data-fitbox-render-ready="true"] {
+                  #messageList df-card[data-fitbot-render-ready="true"] {
                     visibility: visible;
                   }
                   @media (max-width: 520px) {
@@ -1018,7 +1018,7 @@ page = dedent(
                 `);
               }
               if (nestedRoot.host?.localName === "df-card") {
-                ensureShadowStyle(nestedRoot, "fitbox-card-theme", `
+                ensureShadowStyle(nestedRoot, "fitbot-card-theme", `
                   .card-wrapper {
                     overflow: hidden;
                     margin-top: 12px !important;
@@ -1030,7 +1030,7 @@ page = dedent(
                 `);
               }
               if (nestedRoot.host?.localName === "df-description") {
-                ensureShadowStyle(nestedRoot, "fitbox-description-theme", `
+                ensureShadowStyle(nestedRoot, "fitbot-description-theme", `
                   #descriptionWrapper {
                     padding: 21px 23px !important;
                     background: #ffffff !important;
@@ -1050,7 +1050,7 @@ page = dedent(
                 `);
               }
               if (nestedRoot.host?.localName === "df-accordion") {
-                ensureShadowStyle(nestedRoot, "fitbox-accordion-theme", `
+                ensureShadowStyle(nestedRoot, "fitbot-accordion-theme", `
                   #dfAccordionWrapper {
                     padding: 20px 23px !important;
                     background: linear-gradient(180deg, #fbfdf7 0%, #f5f9ec 100%) !important;
@@ -1093,7 +1093,7 @@ page = dedent(
               if (nestedRoot.host?.localName === "df-button") {
                 nestedRoot.host.style.setProperty("display", "block", "important");
                 nestedRoot.host.style.setProperty("margin", "0 22px 20px", "important");
-                ensureShadowStyle(nestedRoot, "fitbox-detail-button-theme", `
+                ensureShadowStyle(nestedRoot, "fitbot-detail-button-theme", `
                   button, #button, .button {
                     width: 100% !important;
                     min-height: 48px !important;
@@ -1124,7 +1124,7 @@ page = dedent(
                 `);
               }
               if (nestedRoot.host?.localName === "df-messenger-user-input") {
-                ensureShadowStyle(nestedRoot, "fitbox-input-theme", `
+                ensureShadowStyle(nestedRoot, "fitbot-input-theme", `
                   input, textarea { font-size: 18px !important; }
                   .input-container { min-height: 66px !important; }
                 `);
@@ -1134,12 +1134,12 @@ page = dedent(
             recommendationCards().forEach((card) => {
               const text = cardText(card);
               if (!text || text.endsWith("Agent Says:")) return;
-              const resultIndex = Number(card.dataset.fitboxResultIndex || "0");
-              const waitsForPager = resultIndex >= 4 && !card.dataset.fitboxPagerGroup;
+              const resultIndex = Number(card.dataset.fitbotResultIndex || "0");
+              const waitsForPager = resultIndex >= 4 && !card.dataset.fitbotPagerGroup;
               const isPagerControl = text.includes("Show more exercises") ||
                 (text.includes("Previous page") && text.includes("Next page"));
-              if (waitsForPager || (isPagerControl && !card.dataset.fitboxPagerRole)) return;
-              card.dataset.fitboxRenderReady = "true";
+              if (waitsForPager || (isPagerControl && !card.dataset.fitbotPagerRole)) return;
+              card.dataset.fitbotRenderReady = "true";
             });
           }
           let messageObserver = null;
@@ -1210,8 +1210,8 @@ page = dedent(
             panel.style.setProperty("overflow", "hidden", "important");
             panel.style.setProperty("box-shadow", "none", "important");
             panel.scrollTop = 0;
-            if (panel.dataset.fitboxScrollPinned !== "true") {
-              panel.dataset.fitboxScrollPinned = "true";
+            if (panel.dataset.fitbotScrollPinned !== "true") {
+              panel.dataset.fitbotScrollPinned = "true";
               panel.addEventListener("scroll", () => {
                 if (panel.scrollTop !== 0) panel.scrollTop = 0;
               }, { passive: true });
@@ -1239,7 +1239,7 @@ page = dedent(
           window.setInterval(() => { themeChatContent(); observeMessageList(); }, 700);
           window.addEventListener("dfMessengerLoaded", () => { fitChatToPanel(); scrollToLatest(120); });
           messenger.addEventListener("df-messenger-loaded", () => { fitChatToPanel(); scrollToLatest(120); });
-          const detailMarker = "#fitbox-view-details=";
+          const detailMarker = "#fitbot-view-details=";
           function sendDetailsFromMarker(link, event) {
             link = String(link || "");
             const marker = detailMarker;

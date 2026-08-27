@@ -1,4 +1,4 @@
-"""Static regression checks for the FitBox Streamlit integration shell."""
+"""Static regression checks for the FitBot Streamlit integration shell."""
 
 from __future__ import annotations
 
@@ -10,11 +10,18 @@ from pathlib import Path
 SOURCE = Path(__file__).with_name("app.py").read_text(encoding="utf-8")
 
 
-class FitBoxStreamlitV41Tests(unittest.TestCase):
+class FitBotStreamlitV41Tests(unittest.TestCase):
+    def test_visible_brand_is_fitbot_without_assistant_wording(self) -> None:
+        self.assertIn('page_title="FitBot"', SOURCE)
+        self.assertIn('<h1>FitBot</h1>', SOURCE)
+        self.assertIn('chat-title="FitBot"', SOURCE)
+        self.assertNotIn("FitBox", SOURCE)
+        self.assertNotIn("assistant", SOURCE.casefold())
+
     def test_visible_copy_is_natural(self) -> None:
         self.assertIn("Personalised exercise discovery", SOURCE)
         self.assertIn(
-            "Choose a supported question. FitBox will prepare the exact wording for you.",
+            "Choose a supported question. FitBot will prepare the exact wording for you.",
             SOURCE,
         )
         self.assertNotIn("Dataset-based exercise discovery", SOURCE)
@@ -63,11 +70,11 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         self.assertIn('font: 800 26px/1.2 "Manrope"', SOURCE)
         self.assertIn("font-size: 18px !important;", SOURCE)
         self.assertIn("min-height: 66px !important;", SOURCE)
-        self.assertIn("fitbox-input-theme", SOURCE)
+        self.assertIn("fitbot-input-theme", SOURCE)
 
     def test_question_guide_matches_dialogflow_training(self) -> None:
         for phrase in (
-            "How do I use FitBox?",
+            "How do I use FitBot?",
             "Recommend exercises",
             "Show me beginner exercises",
             "Show me exercises using dumbbells",
@@ -108,23 +115,23 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             'panel.style.setProperty("flex-direction", "column", "important")',
             'inputShell.style.setProperty("flex", "0 0 auto", "important")',
             "if (shell) shell.scrollTop = 0",
-            'panel.dataset.fitboxScrollPinned !== "true"',
+            'panel.dataset.fitbotScrollPinned !== "true"',
             "if (panel.scrollTop !== 0) panel.scrollTop = 0",
         ):
             self.assertIn(text, SOURCE)
 
-    def test_rich_cards_receive_fitbox_theme(self) -> None:
+    def test_rich_cards_receive_fitbot_theme(self) -> None:
         for selector in (
             'nestedRoot.host?.localName === "df-card"',
             'nestedRoot.host?.localName === "df-description"',
             'nestedRoot.host?.localName === "df-accordion"',
             "border-left: 4px solid #b8f22e",
-            "fitbox-card-theme",
+            "fitbot-card-theme",
             "white-space: pre-line !important",
             "border-left: 4px solid #b8f22e !important",
             "line-height: 1.85 !important",
             'nestedRoot.host?.localName === "df-button"',
-            "fitbox-detail-button-theme",
+            "fitbot-detail-button-theme",
             "background: #b8f22e !important",
         ):
             self.assertIn(selector, SOURCE)
@@ -134,7 +141,7 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             "function findSendControl()",
             "function sendPrompt(value)",
             "detailSendLockedUntil = Date.now() + 1000",
-            'const detailMarker = "#fitbox-view-details="',
+            'const detailMarker = "#fitbot-view-details="',
             "function sendDetailsFromMarker(link, event)",
             'document.addEventListener("click"',
             "event.composedPath().find",
@@ -146,7 +153,7 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             "return sendPrompt(`Tell me about ${title}`)",
         ):
             self.assertIn(text, SOURCE)
-        self.assertNotIn("FITBOX_VIEW_DETAILS", SOURCE)
+        self.assertNotIn("FITBOT_VIEW_DETAILS", SOURCE)
 
     def test_initial_chat_hero_fills_empty_space_then_hides(self) -> None:
         for text in (
@@ -174,14 +181,14 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
 
     def test_recommendation_pages_are_local_and_do_not_send_chat_text(self) -> None:
         for text in (
-            'const recommendationPageMarker = "#fitbox-recommendation-page="',
+            'const recommendationPageMarker = "#fitbot-recommendation-page="',
             "function discoverRecommendationPagers()",
             "function updateRecommendationGroup(group, page, activated)",
             "function setRecommendationPage(page, event)",
             'text.includes("Previous page")',
             'text.includes("Next page")',
             '...roots.map((root) => root.textContent || "")',
-            'card.dataset.fitboxResultIndex',
+            'card.dataset.fitbotResultIndex',
         ):
             self.assertIn(text, SOURCE)
         pager_function = SOURCE.split("function setRecommendationPage", 1)[1].split(
@@ -199,9 +206,9 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
     def test_second_page_cards_are_hidden_before_first_render(self) -> None:
         for text in (
             'visibility: hidden;',
-            'df-card[data-fitbox-render-ready="true"]',
+            'df-card[data-fitbot-render-ready="true"]',
             'const waitsForPager = resultIndex >= 4',
-            'card.dataset.fitboxRenderReady = "true"',
+            'card.dataset.fitbotRenderReady = "true"',
         ):
             self.assertIn(text, SOURCE)
 
