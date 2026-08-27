@@ -421,11 +421,12 @@ page = dedent(
             text-shadow: 0 8px 28px rgba(111, 147, 13, .16);
           }
           .hero-copy {
-            max-width: 610px;
+            max-width: 860px;
             margin: 19px auto 0;
             color: #5c6657;
             font-size: 18px;
             line-height: 1.5;
+            white-space: nowrap;
           }
           .hero-pills {
             display: flex;
@@ -504,7 +505,7 @@ page = dedent(
             .clear-chat { padding: 8px 10px; }
             .chat-hero { top: 94px; width: calc(100% - 44px); padding-inline: 10px; }
             .hero-title { font-size: clamp(34px, 10vw, 52px); }
-            .hero-copy { max-width: 430px; margin-top: 14px; font-size: 16px; }
+            .hero-copy { max-width: 430px; margin-top: 14px; font-size: 16px; white-space: normal; }
             .hero-pills { margin-top: 14px; }
             .drawer {
               position: absolute;

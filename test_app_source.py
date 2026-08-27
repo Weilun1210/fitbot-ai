@@ -154,6 +154,9 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             "Your training companion",
             "Train smarter.",
             "Move stronger.",
+            "max-width: 860px;",
+            "white-space: nowrap;",
+            "white-space: normal;",
             ".chat-stage.conversation-active .chat-hero",
             'stage.classList.add("conversation-active")',
         ):
