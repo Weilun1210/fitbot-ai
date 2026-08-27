@@ -846,8 +846,9 @@ page = dedent(
               .map((root) => root.host);
           }
           function cardText(card) {
-            return String(card?.shadowRoot?.textContent || card?.textContent || "")
-              .replace(/\\s+/g, " ").trim();
+            const roots = nestedRoots(card?.shadowRoot);
+            return [card?.textContent || "", ...roots.map((root) => root.textContent || "")]
+              .join(" ").replace(/\\s+/g, " ").trim();
           }
           function stylePagerCard(card, navigation = false) {
             if (!card?.shadowRoot) return;
@@ -867,7 +868,7 @@ page = dedent(
             nestedRoots(card.shadowRoot).forEach((root) => {
               if (root.host?.localName !== "df-button") return;
               const text = String(root.textContent || root.host.textContent || "").replace(/\\s+/g, " ").trim();
-              const isArrow = /^(Previous page|Next page)$/.test(text);
+              const isArrow = text.includes("Previous page") || text.includes("Next page");
               root.host.style.setProperty("display", "block", "important");
               root.host.style.setProperty("width", isArrow ? "calc(50% - 5px)" : "100%", "important");
               root.host.style.setProperty("margin", "0", "important");
@@ -910,7 +911,8 @@ page = dedent(
               nestedRoots(navCard.shadowRoot).forEach((root) => {
                 if (root.host?.localName !== "df-button") return;
                 const text = String(root.textContent || root.host.textContent || "").replace(/\\s+/g, " ").trim();
-                const disabled = (page === 1 && text === "Previous page") || (page === 2 && text === "Next page");
+                const disabled = (page === 1 && text.includes("Previous page")) ||
+                  (page === 2 && text.includes("Next page"));
                 root.host.style.setProperty("opacity", disabled ? ".42" : "1", "important");
                 root.host.style.setProperty("pointer-events", disabled ? "none" : "auto", "important");
                 root.host.setAttribute("aria-disabled", String(disabled));

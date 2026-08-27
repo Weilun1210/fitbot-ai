@@ -177,8 +177,9 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             "function setRecommendationPage(page, event)",
             '"Showing exercises 1–3"',
             '"Showing exercises 4–6"',
-            'text === "Previous page"',
-            'text === "Next page"',
+            'text.includes("Previous page")',
+            'text.includes("Next page")',
+            '...roots.map((root) => root.textContent || "")',
             'card.dataset.fitboxResultIndex',
         ):
             self.assertIn(text, SOURCE)
