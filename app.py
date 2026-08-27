@@ -475,25 +475,6 @@ page = dedent(
             --df-messenger-focus-color: #6f930d;
             z-index: 2;
           }
-          .toast {
-            position: absolute;
-            left: 50%;
-            bottom: 16px;
-            z-index: 8;
-            transform: translate(-50%, 12px);
-            opacity: 0;
-            pointer-events: none;
-            width: max-content;
-            max-width: calc(100% - 32px);
-            padding: 13px 18px;
-            border-radius: 10px;
-            background: #171b14;
-            color: white;
-            text-align: center;
-            font-size: 16px;
-            transition: .2s ease;
-          }
-          .toast.show { opacity: 1; transform: translate(-50%, 0); }
           @media (max-width: 760px) {
             .shell { height: 100vh; border-radius: 0; }
             .topbar { padding: 12px 16px; }
@@ -681,7 +662,6 @@ page = dedent(
                 </div>
               </section>
               <df-messenger intent="WELCOME" chat-title="FitBox Assistant" agent-id="__AGENT_ID__" language-code="en" expand></df-messenger>
-              <div class="toast" id="toast" role="status" aria-live="polite">Question added — press Enter to send</div>
             </section>
           </div>
         </main>
@@ -697,7 +677,6 @@ page = dedent(
           const stage = document.getElementById("chat-stage");
           const clearChatButton = document.getElementById("clear-chat");
           const loading = document.getElementById("loading");
-          const toast = document.getElementById("toast");
           const promptCard = document.getElementById("prompt-card");
           const promptPreview = document.getElementById("prompt-preview");
           const useQuestion = document.getElementById("use-question");
@@ -708,7 +687,6 @@ page = dedent(
           const testedCombination = document.getElementById("tested-combination");
           const exerciseName = document.getElementById("exercise-name");
           let currentPrompt = "";
-          let toastTimer;
 
           function isMobile() { return window.matchMedia("(max-width: 760px)").matches; }
           function setDrawer(open, returnFocus = false) {
@@ -726,12 +704,7 @@ page = dedent(
             if (event.key === "Escape" && workspace.classList.contains("drawer-open")) setDrawer(false, true);
           });
 
-          function showToast(message) {
-            toast.textContent = message;
-            toast.classList.add("show");
-            window.clearTimeout(toastTimer);
-            toastTimer = window.setTimeout(() => toast.classList.remove("show"), 1900);
-          }
+          function showToast() { return; }
           function findChat() { return messenger.shadowRoot?.querySelector("df-messenger-chat"); }
           function findInput() {
             const userInput = findChat()?.shadowRoot?.querySelector("df-messenger-user-input");

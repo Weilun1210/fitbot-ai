@@ -178,8 +178,6 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
             "function discoverRecommendationPagers()",
             "function updateRecommendationGroup(group, page, activated)",
             "function setRecommendationPage(page, event)",
-            '"Showing exercises 1–3"',
-            '"Showing exercises 4–6"',
             'text.includes("Previous page")',
             'text.includes("Next page")',
             '...roots.map((root) => root.textContent || "")',
@@ -191,6 +189,12 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         )[0]
         self.assertNotIn("sendPrompt(", pager_function)
         self.assertNotIn("setPrompt(", pager_function)
+
+    def test_transient_black_toasts_are_not_rendered(self) -> None:
+        self.assertNotIn('class="toast"', SOURCE)
+        self.assertNotIn(".toast.show", SOURCE)
+        self.assertNotIn("Question added — press Enter to send</div>", SOURCE)
+        self.assertIn("function showToast() { return; }", SOURCE)
 
     def test_script_block_is_present_once(self) -> None:
         self.assertEqual(len(re.findall(r"<script>", SOURCE)), 1)
