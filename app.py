@@ -1004,6 +1004,10 @@ page = dedent(
                     display: block;
                     width: min(720px, calc(100% - 12px));
                     max-width: calc(100% - 12px);
+                    visibility: hidden;
+                  }
+                  #messageList df-card[data-fitbox-render-ready="true"] {
+                    visibility: visible;
                   }
                   @media (max-width: 520px) {
                     #messageList { padding: 12px !important; }
@@ -1127,6 +1131,16 @@ page = dedent(
               }
             });
             discoverRecommendationPagers();
+            recommendationCards().forEach((card) => {
+              const text = cardText(card);
+              if (!text || text.endsWith("Agent Says:")) return;
+              const resultIndex = Number(card.dataset.fitboxResultIndex || "0");
+              const waitsForPager = resultIndex >= 4 && !card.dataset.fitboxPagerGroup;
+              const isPagerControl = text.includes("Show more exercises") ||
+                (text.includes("Previous page") && text.includes("Next page"));
+              if (waitsForPager || (isPagerControl && !card.dataset.fitboxPagerRole)) return;
+              card.dataset.fitboxRenderReady = "true";
+            });
           }
           let messageObserver = null;
           let observedMessageList = null;

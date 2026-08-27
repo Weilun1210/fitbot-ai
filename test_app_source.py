@@ -196,6 +196,15 @@ class FitBoxStreamlitV41Tests(unittest.TestCase):
         self.assertNotIn("Question added — press Enter to send</div>", SOURCE)
         self.assertIn("function showToast() { return; }", SOURCE)
 
+    def test_second_page_cards_are_hidden_before_first_render(self) -> None:
+        for text in (
+            'visibility: hidden;',
+            'df-card[data-fitbox-render-ready="true"]',
+            'const waitsForPager = resultIndex >= 4',
+            'card.dataset.fitboxRenderReady = "true"',
+        ):
+            self.assertIn(text, SOURCE)
+
     def test_script_block_is_present_once(self) -> None:
         self.assertEqual(len(re.findall(r"<script>", SOURCE)), 1)
         self.assertEqual(len(re.findall(r"</script>", SOURCE)), 2)
