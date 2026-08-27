@@ -6,7 +6,7 @@ structured exercise guidance.
 
 ## Live project
 
-- Public website: <https://fitbot.streamlit.app/>
+- Public website: <https://fitbot-ai.streamlit.app/>
 - GitHub repository: <https://github.com/Weilun1210/fitbox-streamlit-assistant>
 - Dialogflow ES Agent ID: `8ff14895-4120-431e-b4ef-015ed78ce0cc`
 - Tested Streamlit version: `1.61.1`
