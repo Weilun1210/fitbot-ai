@@ -7,7 +7,7 @@ structured exercise guidance.
 ## Live project
 
 - Public website: <https://fitbot-ai.streamlit.app/>
-- GitHub repository: <https://github.com/Weilun1210/fitbox-streamlit-assistant>
+- GitHub repository: <https://github.com/Weilun1210/fitbot-ai>
 - Dialogflow ES Agent ID: `8ff14895-4120-431e-b4ef-015ed78ce0cc`
 - Tested Streamlit version: `1.61.1`
 
@@ -31,7 +31,7 @@ type, or combinations of those filters. Exercise records come from
   switches from cards 1–3 to 4–6, then left/right arrows navigate without
   sending another message to Dialogflow.
 - **View details** sends a visible `Tell me about {exercise}` user message,
-  stays in the current page, then the assistant answers with the existing
+  stays in the current page, then FitBot answers with the existing
   exercise-details card.
 
 The interface includes a collapsible question guide. It can build a canonical
