@@ -2,7 +2,7 @@
 
 The website provides an accessible question builder and embeds Dialogflow
 Messenger. Dialogflow and the PythonAnywhere webhook remain responsible for
-answering questions from megaGymDataset.csv.
+answering questions from the team-provided FitBot_cleaned_dataset.csv.
 """
 
 from textwrap import dedent

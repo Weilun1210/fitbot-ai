@@ -14,8 +14,8 @@ structured exercise guidance.
 ## Capabilities
 
 FitBot recommends exercises by fitness level, body part, equipment, exercise
-type, or combinations of those filters. Exercise records come from
-`megaGymDataset.csv`.
+type, or combinations of those filters. Exercise records come from the
+team-provided cleaned file `webhook/FitBot_cleaned_dataset.csv`.
 
 ## Supported questions
 
@@ -48,6 +48,24 @@ python -m streamlit run app.py
 
 The project pins Streamlit `1.61.1` so the tested embedded Messenger layout is
 reproducible.
+
+## Run the webhook locally
+
+```powershell
+cd webhook
+python -m pip install -r requirements.txt
+python webhook.py
+```
+
+The webhook starts on `http://localhost:8080`. Its Dialogflow endpoint is
+`POST /webhook`, while `GET /` and `GET /health` report its running status.
+
+## Project files
+
+- `app.py`: Streamlit website deployed from the repository root.
+- `webhook/webhook.py`: Flask fulfillment logic.
+- `webhook/FitBot_cleaned_dataset.csv`: shared team-cleaned exercise data.
+- `dialogflow/Fitbotdialogflow.zip`: Dialogflow ES agent export.
 
 ## Deploy on Streamlit Community Cloud
 
